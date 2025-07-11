@@ -227,8 +227,8 @@
         display: flex;
         gap: 15px;
         margin-bottom: 20px;
-        flex-wrap: wrap;
         margin-top: 80px;
+        flex-wrap: wrap;
         justify-content: center;
     }
 
@@ -449,8 +449,19 @@
             padding: 10px 15px;
         }
     }
+
+    @media (max-width: 600px) {
+    .card-content {
+        flex-direction: column !important;
+        gap: 10px !important;
+    }
+    #voice-transcript {
+        width: 100%;
+    }
+}
 </style>
     </head>
+    <body>
     <div class="header">
         <div class="logo">
             <!-- Replace 'logo.png' with your actual logo file path -->
@@ -525,31 +536,37 @@
         <div class="progress-fill" id="progress-fill"></div>
     </div>
     
-    <div class="flash-card-container">
-        <div class="flash-card" id="flash-card">
-            <div class="card-face card-front">
-                <div class="card-content">
-                    <h2 id="question">What does 3PL stand for?</h2>
-                    <div class="answer-buttons" id="answer-buttons" style="display: none;">
-                        <button class="answer-btn correct-btn" onclick="answerQuestion(true)">✓ I Know This</button>
-                        <button class="answer-btn incorrect-btn" onclick="answerQuestion(false)">✗ Need to Study</button>
-                    </div>
-                </div>
-            </div>
-            <div class="card-face card-back">
-                <div class="card-content">
-                    <p id="answer">Third-Party Logistics - a service provider that manages logistics operations for other companies.</p>
-                    <div class="answer-buttons">
-                        <button class="answer-btn correct-btn" onclick="answerQuestion(true)">✓ Got It Right!</button>
-                        <button class="answer-btn incorrect-btn" onclick="answerQuestion(false)">✗ Missed This One</button>
-                    </div>
+  <div class="flash-card-container">
+    <div class="flash-card" id="flash-card">
+        <div class="card-face card-front">
+            <div class="card-content" style="display: flex; align-items: flex-start; gap: 32px;">
+    <div style="flex: 2;">
+        <h2 id="question">What does 3PL stand for?</h2>
+        <div class="answer-buttons" id="answer-buttons" style="display: none;">
+            <button class="answer-btn correct-btn" onclick="answerQuestion(true)">✓ I Know This</button>
+            <button class="answer-btn incorrect-btn" onclick="answerQuestion(false)">✗ Need to Study</button>
+        </div>
+    </div>
+    <div id="voice-transcript" style="flex: 1.5; max-width: 320px; min-width: 220px; background:rgba(255,255,255,0.12);color:white;padding:22px 18px;border-radius:16px;min-height:60px;box-shadow:0 2px 12px rgba(0,0,0,0.12);font-size:1.15rem;">
+        <strong>🎤 Transcript:</strong>
+        <span id="transcript-text"></span>
+    </div>
+</div>
+        </div>
+        <div class="card-face card-back">
+            <div class="card-content">
+                <p id="answer">Third-Party Logistics - a service provider that manages logistics operations for other companies.</p>
+                <div class="answer-buttons">
+                    <button class="answer-btn correct-btn" onclick="answerQuestion(true)">✓ Got It Right!</button>
+                    <button class="answer-btn incorrect-btn" onclick="answerQuestion(false)">✗ Missed This One</button>
                 </div>
             </div>
         </div>
     </div>
-
+</div>
     <div class="controls">
         <button class="btn btn-primary" onclick="flipCard()">Reveal Answer</button>
+        <button class="btn btn-primary" onclick="startVoiceAnswer()">🎤 Answer by Voice</button>
         <button class="btn btn-secondary" onclick="nextCard()">Next Question</button>
         <button class="btn btn-secondary" onclick="endGame()">End Game</button>
     </div>
@@ -731,8 +748,42 @@
         if (!speechRecognition) return;
         
         speechRecognition.onresult = function(event) {
-            const command = event.results[0][0].transcript.toLowerCase();
-            handleVoiceCommand(command);
+            let interimTranscript = '';
+            let finalTranscript = '';
+            for (let i = event.resultIndex; i < event.results.length; ++i) {
+                if (event.results[i].isFinal) {
+                    finalTranscript += event.results[i][0].transcript;
+                } else {
+                    interimTranscript += event.results[i][0].transcript;
+                }
+            }
+            // Show live transcript (interim if not final yet)
+            document.getElementById('transcript-text').textContent = finalTranscript + interimTranscript;
+
+            // Only check answer when final
+            if (finalTranscript) {
+                const spoken = finalTranscript.trim().toLowerCase();
+                const correctAnswer = filteredCards[currentCardIndex].answer.trim().toLowerCase();
+
+                // Fuzzy match: allow up to 25% difference
+                const distance = levenshtein(spoken, correctAnswer);
+                const threshold = Math.floor(correctAnswer.length * 0.25);
+
+                // Also check for key phrase match
+                let isCorrect = false;
+                if (distance <= threshold) {
+                    isCorrect = true;
+                } else if (
+                    (correctAnswer.includes(spoken) || spoken.includes(correctAnswer)) &&
+                    spoken.length >= correctAnswer.length * 0.5
+                ) {
+                    isCorrect = true;
+                }
+
+                answerQuestion(isCorrect);
+                alert(isCorrect ? "Correct!" : "Incorrect. Try again!");
+                recognition.stop();
+            }
         };
         
         speechRecognition.onerror = function(event) {
@@ -1164,6 +1215,91 @@
 
     // Initialize
     updateCard();
+  function levenshtein(a, b) {
+    // Simple Levenshtein distance implementation
+    const matrix = Array(a.length + 1).fill(null).map(() =>
+        Array(b.length + 1).fill(null)
+    );
+    for (let i = 0; i <= a.length; i++) matrix[i][0] = i;
+    for (let j = 0; j <= b.length; j++) matrix[0][j] = j;
+    for (let i = 1; i <= a.length; i++) {
+        for (let j = 1; j <= b.length; j++) {
+            const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+            matrix[i][j] = Math.min(
+                matrix[i - 1][j] + 1,      // deletion
+                matrix[i][j - 1] + 1,      // insertion
+                matrix[i - 1][j - 1] + cost // substitution
+            );
+        }
+    }
+    return matrix[a.length][b.length];
+}
+
+function startVoiceAnswer() {
+    if (!('webkitSpeechRecognition' in window)) {
+        alert('Voice recognition not supported in this browser.');
+        return;
+    }
+    const recognition = new webkitSpeechRecognition();
+    recognition.lang = 'en-US';
+    recognition.interimResults = true;
+    recognition.maxAlternatives = 1;
+
+    let finalTranscript = '';
+
+    recognition.onresult = function(event) {
+        let interimTranscript = '';
+        for (let i = event.resultIndex; i < event.results.length; ++i) {
+            if (event.results[i].isFinal) {
+                finalTranscript += event.results[i][0].transcript;
+            } else {
+                interimTranscript += event.results[i][0].transcript;
+            }
+        }
+        // Show live transcript (interim if not final yet)
+        document.getElementById('transcript-text').textContent = finalTranscript + interimTranscript;
+
+        // Only check answer when final
+        if (finalTranscript) {
+            const spoken = finalTranscript.trim().toLowerCase();
+            const correctAnswer = filteredCards[currentCardIndex].answer.trim().toLowerCase();
+
+            // Fuzzy match: allow up to 25% difference
+            const distance = levenshtein(spoken, correctAnswer);
+            const threshold = Math.floor(correctAnswer.length * 0.25);
+
+            // Also check for key phrase match
+            let isCorrect = false;
+            if (distance <= threshold) {
+                isCorrect = true;
+            } else if (
+                (correctAnswer.includes(spoken) || spoken.includes(correctAnswer)) &&
+                spoken.length >= correctAnswer.length * 0.5
+            ) {
+                isCorrect = true;
+            }
+
+            answerQuestion(isCorrect);
+            alert(isCorrect ? "Correct!" : "Incorrect. Try again!");
+            recognition.stop();
+        }
+    };
+
+    recognition.onerror = function(event) {
+        alert('Voice recognition error: ' + event.error);
+    };
+
+    recognition.onend = function() {
+        // Optionally clear transcript after a few seconds
+        setTimeout(() => {
+            document.getElementById('transcript-text').textContent = '';
+        }, 3000);
+    };
+
+    document.getElementById('transcript-text').textContent = '';
+    recognition.start();
+}
+
 </script>
 
 </html>
