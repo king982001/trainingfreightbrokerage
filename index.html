@@ -1,0 +1,1156 @@
+<html>
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        min-height: 100vh;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .header {
+        text-align: center;
+        margin-bottom: 20px;
+        color: white;
+    }
+
+    .logo {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 15px;
+        margin-bottom: 15px;
+    }
+
+    .logo-icon {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, #ff6b35, #f7931e);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+
+    .company-name {
+        font-size: 2.2rem;
+        font-weight: 700;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        background: linear-gradient(135deg, #ff6b35, #f7931e);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .tagline {
+        font-size: 1.1rem;
+        opacity: 0.9;
+        margin-bottom: 10px;
+    }
+
+    .game-modes {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .mode-btn {
+        padding: 12px 24px;
+        border: none;
+        border-radius: 25px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+
+    .mode-btn.active {
+        background: linear-gradient(135deg, #ff6b35, #f7931e);
+        color: white;
+        transform: translateY(-2px);
+    }
+
+    .mode-btn:not(.active) {
+        background: rgba(255,255,255,0.2);
+        color: white;
+        border: 2px solid rgba(255,255,255,0.3);
+    }
+
+    .game-stats {
+        display: flex;
+        gap: 20px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .stat-card {
+        background: rgba(255,255,255,0.15);
+        border-radius: 15px;
+        padding: 15px 20px;
+        color: white;
+        text-align: center;
+        min-width: 120px;
+        backdrop-filter: blur(10px);
+    }
+
+    .stat-number {
+        font-size: 2rem;
+        font-weight: 700;
+        display: block;
+    }
+
+    .stat-label {
+        font-size: 0.9rem;
+        opacity: 0.8;
+    }
+
+    .player-setup {
+        background: rgba(255,255,255,0.1);
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 20px;
+        color: white;
+        text-align: center;
+    }
+
+    .player-input {
+        display: flex;
+        gap: 10px;
+        margin: 15px 0;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .player-input input {
+        padding: 10px 15px;
+        border: none;
+        border-radius: 20px;
+        font-size: 1rem;
+        min-width: 200px;
+    }
+
+    .flash-card-container {
+        perspective: 1000px;
+        margin-bottom: 20px;
+    }
+
+    .flash-card {
+        width: 450px;
+        height: 320px;
+        position: relative;
+        transform-style: preserve-3d;
+        transition: transform 0.6s;
+        cursor: pointer;
+    }
+
+    .flash-card.flipped {
+        transform: rotateY(180deg);
+    }
+
+    .card-face {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        backface-visibility: hidden;
+        border-radius: 15px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 25px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+
+    .card-front {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+    }
+
+    .card-back {
+        background: linear-gradient(135deg, #f093fb, #f5576c);
+        color: white;
+        transform: rotateY(180deg);
+    }
+
+    .card-content h2 {
+        font-size: 1.3rem;
+        margin-bottom: 20px;
+        line-height: 1.4;
+    }
+
+    .card-content p {
+        font-size: 1.1rem;
+        line-height: 1.5;
+    }
+
+    .answer-buttons {
+        display: flex;
+        gap: 15px;
+        margin-top: 20px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .answer-btn {
+        padding: 12px 30px;
+        border: none;
+        border-radius: 25px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+
+    .correct-btn {
+        background: linear-gradient(135deg, #56ab2f, #a8e6cf);
+        color: white;
+    }
+
+    .incorrect-btn {
+        background: linear-gradient(135deg, #ff416c, #ff4b2b);
+        color: white;
+    }
+
+    .controls {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .btn {
+        padding: 12px 24px;
+        border: none;
+        border-radius: 25px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #4facfe, #00f2fe);
+        color: white;
+    }
+
+    .btn-secondary {
+        background: linear-gradient(135deg, #43e97b, #38f9d7);
+        color: white;
+    }
+
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+    }
+
+    .leaderboard {
+        background: rgba(255,255,255,0.1);
+        border-radius: 15px;
+        padding: 20px;
+        color: white;
+        min-width: 300px;
+        backdrop-filter: blur(10px);
+    }
+
+    .leaderboard h3 {
+        text-align: center;
+        margin-bottom: 15px;
+        font-size: 1.5rem;
+    }
+
+    .leaderboard-entry {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 15px;
+        margin: 5px 0;
+        background: rgba(255,255,255,0.1);
+        border-radius: 10px;
+    }
+
+    .leaderboard-entry.current-player {
+        background: linear-gradient(135deg, #ff6b35, #f7931e);
+    }
+
+    .rank {
+        font-weight: 700;
+        font-size: 1.2rem;
+    }
+
+    .timer {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #ff6b35;
+        text-align: center;
+        margin: 10px 0;
+    }
+
+    .category-filter {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .filter-btn {
+        padding: 8px 16px;
+        border: 2px solid rgba(255,255,255,0.3);
+        background: rgba(255,255,255,0.1);
+        color: white;
+        border-radius: 20px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 0.9rem;
+    }
+
+    .filter-btn.active {
+        background: rgba(255,255,255,0.3);
+        border-color: rgba(255,255,255,0.6);
+    }
+
+    .game-over {
+        background: rgba(255,255,255,0.1);
+        border-radius: 15px;
+        padding: 30px;
+        color: white;
+        text-align: center;
+        backdrop-filter: blur(10px);
+    }
+
+    .final-score {
+        font-size: 3rem;
+        font-weight: 700;
+        color: #ff6b35;
+        margin: 20px 0;
+    }
+
+    .ai-controls {
+        background: rgba(255,255,255,0.1);
+        border-radius: 15px;
+        padding: 15px;
+        margin-bottom: 20px;
+        color: white;
+        text-align: center;
+        backdrop-filter: blur(10px);
+    }
+
+    .voice-btn {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        border: none;
+        border-radius: 20px;
+        padding: 10px 20px;
+        margin: 5px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+    }
+
+    .voice-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+
+    .voice-btn.active {
+        background: linear-gradient(135deg, #ff6b35, #f7931e);
+    }
+
+    .ai-hint {
+        background: rgba(255,255,255,0.1);
+        border-radius: 10px;
+        padding: 15px;
+        margin: 10px 0;
+        border-left: 4px solid #ff6b35;
+        display: none;
+    }
+
+    .difficulty-selector {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        margin: 15px 0;
+        flex-wrap: wrap;
+    }
+
+    .difficulty-btn {
+        padding: 8px 16px;
+        border: 2px solid rgba(255,255,255,0.3);
+        background: rgba(255,255,255,0.1);
+        color: white;
+        border-radius: 15px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 0.9rem;
+    }
+
+    .difficulty-btn.active {
+        background: linear-gradient(135deg, #ff6b35, #f7931e);
+        border-color: #ff6b35;
+    }
+
+    .progress-bar {
+        width: 100%;
+        height: 8px;
+        background: rgba(255,255,255,0.2);
+        border-radius: 4px;
+        margin: 10px 0;
+        overflow: hidden;
+    }
+
+    .progress-fill {
+        height: 100%;
+        background: linear-gradient(135deg, #ff6b35, #f7931e);
+        width: 0%;
+        transition: width 0.3s ease;
+    }
+
+    .speaking {
+        animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+        0% { opacity: 1; }
+        50% { opacity: 0.7; }
+        100% { opacity: 1; }
+    }
+
+    @media (max-width: 480px) {
+        .flash-card {
+            width: 320px;
+            height: 300px;
+        }
+        
+        .company-name {
+            font-size: 1.8rem;
+        }
+        
+        .game-stats {
+            gap: 10px;
+        }
+        
+        .stat-card {
+            min-width: 100px;
+            padding: 10px 15px;
+        }
+    }
+</style>
+<div id="game-setup" class="player-setup">
+    <h3>🏆 Start Your Training Challenge</h3>
+    <div class="player-input">
+        <input type="text" id="player-name" placeholder="Enter your name" maxlength="20">
+        <button class="btn btn-primary" onclick="startGame()">Start Game</button>
+    </div>
+    <div class="game-modes">
+        <button class="mode-btn active" onclick="setGameMode('practice')">Practice Mode</button>
+        <button class="mode-btn" onclick="setGameMode('timed')">Timed Challenge (60s)</button>
+        <button class="mode-btn" onclick="setGameMode('quiz')">Quiz Mode (10 Questions)</button>
+        <button class="mode-btn" onclick="setGameMode('adaptive')">🤖 AI Adaptive Mode</button>
+    </div>
+    
+    <div class="ai-controls">
+        <h4>🎤 AI Voice Assistant</h4>
+        <div>
+            <button class="voice-btn" onclick="toggleVoiceReading()">🔊 Read Questions</button>
+            <button class="voice-btn" onclick="toggleVoiceCommands()">🎙️ Voice Commands</button>
+            <button class="voice-btn" onclick="getAIHint()">💡 AI Hint</button>
+        </div>
+        <div class="difficulty-selector">
+            <button class="difficulty-btn active" onclick="setDifficulty('beginner')">Beginner</button>
+            <button class="difficulty-btn" onclick="setDifficulty('intermediate')">Intermediate</button>
+            <button class="difficulty-btn" onclick="setDifficulty('expert')">Expert</button>
+        </div>
+    </div>
+</div>
+
+<div id="game-area" style="display: none;">
+    <div class="game-stats">
+        <div class="stat-card">
+            <span class="stat-number" id="score">0</span>
+            <span class="stat-label">Score</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-number" id="correct">0</span>
+            <span class="stat-label">Correct</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-number" id="streak">0</span>
+            <span class="stat-label">Streak</span>
+        </div>
+        <div class="stat-card" id="timer-card" style="display: none;">
+            <span class="stat-number timer" id="timer">60</span>
+            <span class="stat-label">Time Left</span>
+        </div>
+    </div>
+
+    <div class="category-filter">
+        <button class="filter-btn active" onclick="filterCards('all')">All Cards</button>
+        <button class="filter-btn" onclick="filterCards('logistics')">Logistics & 3PL</button>
+        <button class="filter-btn" onclick="filterCards('terms')">Freight Terms</button>
+        <button class="filter-btn" onclick="filterCards('trailers')">Trailers</button>
+        <button class="filter-btn" onclick="filterCards('compliance')">Compliance</button>
+        <button class="filter-btn" onclick="filterCards('equipment')">Equipment</button>
+        <button class="filter-btn" onclick="filterCards('dispatch')">Dispatch</button>
+    </div>
+
+    <div id="ai-hint" class="ai-hint">
+        <strong>🤖 AI Hint:</strong> <span id="hint-text"></span>
+    </div>
+    
+    <div class="progress-bar">
+        <div class="progress-fill" id="progress-fill"></div>
+    </div>
+    
+    <div class="flash-card-container">
+        <div class="flash-card" id="flash-card">
+            <div class="card-face card-front">
+                <div class="card-content">
+                    <h2 id="question">What does 3PL stand for?</h2>
+                    <div class="answer-buttons" id="answer-buttons" style="display: none;">
+                        <button class="answer-btn correct-btn" onclick="answerQuestion(true)">✓ I Know This</button>
+                        <button class="answer-btn incorrect-btn" onclick="answerQuestion(false)">✗ Need to Study</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card-face card-back">
+                <div class="card-content">
+                    <p id="answer">Third-Party Logistics - a service provider that manages logistics operations for other companies.</p>
+                    <div class="answer-buttons">
+                        <button class="answer-btn correct-btn" onclick="answerQuestion(true)">✓ Got It Right!</button>
+                        <button class="answer-btn incorrect-btn" onclick="answerQuestion(false)">✗ Missed This One</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button class="btn btn-primary" onclick="flipCard()">Reveal Answer</button>
+        <button class="btn btn-secondary" onclick="nextCard()">Next Question</button>
+        <button class="btn btn-secondary" onclick="endGame()">End Game</button>
+    </div>
+</div>
+
+<div id="game-over" class="game-over" style="display: none;">
+    <h2>🎉 Game Complete!</h2>
+    <div class="final-score" id="final-score">0</div>
+    <div id="performance-message"></div>
+    <button class="btn btn-primary" onclick="playAgain()" style="margin: 20px 10px;">Play Again</button>
+    <button class="btn btn-secondary" onclick="viewLeaderboard()">View Leaderboard</button>
+</div>
+
+<div id="leaderboard-view" class="leaderboard" style="display: none;">
+    <h3>🏆 Training Leaderboard</h3>
+    <div id="leaderboard-list"></div>
+    <button class="btn btn-primary" onclick="hideLeaderboard()" style="margin-top: 20px;">Back to Game</button>
+</div>
+
+<script>
+    const flashCards = [
+        // General Logistics & 3PL
+        { question: "What does 3PL stand for?", answer: "Third-Party Logistics - a service provider that manages logistics operations for other companies, including warehousing, transportation, and distribution services.", category: "logistics" },
+        { question: "How does a 3PL differ from a 1PL or 2PL?", answer: "1PL is the shipper managing their own logistics, 2PL is basic transportation services, while 3PL provides comprehensive logistics services including warehousing, inventory management, and transportation coordination.", category: "logistics" },
+        { question: "Name two advantages of using a 3PL.", answer: "Cost reduction through economies of scale and access to specialized expertise and technology without capital investment.", category: "logistics" },
+        { question: "Give an example of a 3PL transaction.", answer: "A manufacturer contracts a 3PL to receive raw materials, store finished goods in their warehouse, manage inventory, and coordinate shipments to retailers.", category: "logistics" },
+        { question: "What is logistics in simple terms?", answer: "Logistics is the process of planning, coordinating, and managing the movement and storage of goods from origin to destination efficiently and cost-effectively.", category: "logistics" },
+        { question: "What is the role of a logistics provider in the supply chain?", answer: "To optimize the flow of goods, information, and resources between suppliers and customers, ensuring timely delivery while minimizing costs and maximizing efficiency.", category: "logistics" },
+        { question: "What is meant by 'logistics is a value driver'?", answer: "Logistics creates value by reducing costs, improving customer service, enabling market expansion, and providing competitive advantages through efficient supply chain management.", category: "logistics" },
+        { question: "Define the term 'inbound logistics'.", answer: "Inbound logistics involves the transportation, storage, and receiving of raw materials and components coming into a business from suppliers.", category: "logistics" },
+        { question: "Define 'outbound logistics'.", answer: "Outbound logistics covers the storage and transportation of finished products from the company to customers, including order fulfillment and delivery.", category: "logistics" },
+        { question: "What does 'logistics network design' involve?", answer: "Strategic planning of facility locations, transportation routes, inventory positioning, and distribution channels to optimize cost, service, and efficiency across the supply chain.", category: "logistics" },
+
+        // Freight Terms & Abbreviations
+        { question: "What is a BOL?", answer: "Bill of Lading - a legal document that serves as a receipt for goods, contract of carriage, and document of title containing shipment details.", category: "terms" },
+        { question: "What does POD stand for?", answer: "Proof of Delivery - documentation confirming that goods were delivered to the consignee, typically including signature, date, and time of delivery.", category: "terms" },
+        { question: "Define MC number.", answer: "Motor Carrier number - a unique identifier assigned by FMCSA to interstate motor carriers, freight forwarders, and brokers for regulatory compliance.", category: "terms" },
+        { question: "What is the difference between TL and LTL?", answer: "TL (Truckload) uses the entire truck capacity for one shipper, while LTL (Less Than Truckload) combines multiple smaller shipments from different shippers in one truck.", category: "terms" },
+        { question: "What is a COI and why is it needed?", answer: "Certificate of Insurance - proves a carrier has required insurance coverage. Needed to verify financial responsibility and protect against liability in case of accidents or cargo damage.", category: "terms" },
+        { question: "What does DOT# signify?", answer: "Department of Transportation number - a unique identifier assigned to commercial motor vehicles for safety regulation, compliance monitoring, and crash investigation purposes.", category: "terms" },
+        { question: "What does SCAC code stand for?", answer: "Standard Carrier Alpha Code - a unique 2-4 letter code assigned to transportation companies for identification in electronic data interchange and shipping documents.", category: "terms" },
+        { question: "What is FCFS?", answer: "First Come, First Served - a scheduling method where loads or services are assigned based on the order in which requests are received.", category: "terms" },
+        { question: "What is ETA?", answer: "Estimated Time of Arrival - the predicted time when a shipment or vehicle will reach its destination based on current conditions and planned route.", category: "terms" },
+        { question: "What is EDI in logistics?", answer: "Electronic Data Interchange - computer-to-computer exchange of business documents in standardized formats, enabling automated processing of orders, invoices, and shipping notices.", category: "terms" },
+
+        // Trailer Types & Capacities
+        { question: "What is the standard length of a flatbed trailer?", answer: "48 feet or 53 feet, with 53 feet being the most common standard length for over-the-road flatbed trailers.", category: "trailers" },
+        { question: "What is the maximum hauling capacity of a reefer trailer?", answer: "Approximately 43,000-45,000 pounds, depending on the trailer's tare weight and refrigeration unit weight.", category: "trailers" },
+        { question: "What is the function of a Conestoga trailer?", answer: "A flatbed trailer with a retractable tarp system that provides weather protection while allowing top and side loading like a flatbed.", category: "trailers" },
+        { question: "What kind of cargo is a lowboy trailer used for?", answer: "Heavy, oversized equipment like construction machinery, industrial equipment, and other tall loads that exceed standard trailer height limits.", category: "trailers" },
+        { question: "How does a step deck differ from a flatbed?", answer: "A step deck has a lower rear deck (about 3.5 feet high vs 5 feet) allowing for taller cargo while maintaining legal height limits, with a raised front section.", category: "trailers" },
+        { question: "Define a dry van trailer.", answer: "An enclosed trailer with solid walls, roof, and doors, used for transporting general freight that doesn't require temperature control or special handling.", category: "trailers" },
+        { question: "What is the capacity of a hotshot trailer?", answer: "Typically 10,000-26,000 pounds GVWR, designed for smaller, time-sensitive loads using pickup trucks or smaller commercial vehicles.", category: "trailers" },
+        { question: "What type of freight is best suited for a vented van?", answer: "Cargo that needs air circulation but weather protection, such as certain agricultural products, chemicals, or materials that could create condensation.", category: "trailers" },
+        { question: "What is the cargo length capacity of a sprinter van?", answer: "Approximately 11-12 feet of cargo length, depending on the specific model and configuration of the sprinter van.", category: "trailers" },
+        { question: "Which trailer is also called a double drop?", answer: "A lowboy trailer - it has two drops in deck height, one behind the gooseneck and another at the rear, creating the lowest possible deck height.", category: "trailers" },
+
+        // Compliance & Insurance
+        { question: "What is FMCSA?", answer: "Federal Motor Carrier Safety Administration - the federal agency that regulates commercial motor vehicles, drivers, and carriers to improve safety and reduce crashes.", category: "compliance" },
+        { question: "What's the purpose of the DOT?", answer: "Department of Transportation oversees transportation safety, infrastructure, and policy across all modes including highways, aviation, maritime, and rail systems.", category: "compliance" },
+        { question: "What is the function of a TWIC card?", answer: "Transportation Worker Identification Credential - provides secure access to maritime facilities and vessels for workers who need unescorted access to secure areas.", category: "compliance" },
+        { question: "What is the IFTA agreement?", answer: "International Fuel Tax Agreement - allows commercial motor carriers to pay fuel taxes to one jurisdiction for fuel consumed across multiple states/provinces.", category: "compliance" },
+        { question: "What's the difference between IRP and IFTA?", answer: "IRP (International Registration Plan) handles vehicle registration across jurisdictions, while IFTA handles fuel tax reporting and payment across jurisdictions.", category: "compliance" },
+        { question: "Define CSA.", answer: "Compliance, Safety, Accountability - FMCSA's safety enforcement program that uses data to identify high-risk carriers and drivers for intervention.", category: "compliance" },
+        { question: "What is BMC-84 and why is it important?", answer: "A surety bond or trust fund agreement required for freight brokers, providing $75,000 financial security to protect shippers and carriers from broker default.", category: "compliance" },
+
+        // Equipment & Dispatch
+        { question: "What is a liftgate and when is it needed?", answer: "A hydraulic platform that raises and lowers cargo to ground level. Needed when delivery locations lack loading docks or when freight is too heavy for manual handling.", category: "equipment" },
+        { question: "What is a pallet jack?", answer: "A manual or powered tool used to lift and move palletized freight, essential for loading and unloading operations at warehouses and delivery locations.", category: "equipment" },
+        { question: "What is the first step after getting a load from a client?", answer: "Verify all load details including pickup/delivery locations, dates, commodity, weight, dimensions, and any special requirements before posting or assigning the load.", category: "dispatch" },
+        { question: "What documents are required when onboarding a carrier?", answer: "MC authority, insurance certificates (auto liability, cargo, general liability), W-9 form, signed broker-carrier agreement, and safety rating information.", category: "dispatch" },
+        { question: "What is included in the rate confirmation?", answer: "Pickup/delivery details, commodity description, weight, rate, fuel surcharge, accessorial charges, payment terms, and contact information for all parties.", category: "dispatch" },
+
+        // Additional Essential Terms
+        { question: "What is a freight broker's primary role?", answer: "A freight broker acts as an intermediary between shippers who need to transport goods and carriers who have the capacity to move those goods, facilitating transactions.", category: "terms" },
+        { question: "What is a detention charge?", answer: "A fee charged when a truck is held beyond the agreed free time for loading or unloading (typically 2 hours), compensating the carrier for lost productivity.", category: "terms" },
+        { question: "What does 'spot market' mean in freight?", answer: "Immediate freight transactions where loads are booked for current or near-term shipping needs, as opposed to contract rates for ongoing arrangements.", category: "terms" },
+        { question: "What is a lumper fee?", answer: "A charge for third-party workers (lumpers) hired to load or unload freight instead of the truck driver, common at grocery distribution centers.", category: "terms" },
+        { question: "What does FOB stand for?", answer: "Free On Board or Freight On Board - indicates the point at which ownership and liability for goods transfer from seller to buyer during shipping.", category: "terms" }
+    ];
+
+    let currentCardIndex = 0;
+    let isFlipped = false;
+    let filteredCards = [...flashCards];
+    let gameMode = 'practice';
+    let gameActive = false;
+    let playerName = '';
+    let score = 0;
+    let correctAnswers = 0;
+    let currentStreak = 0;
+    let maxStreak = 0;
+    let questionsAnswered = 0;
+    let timer = 60;
+    let timerInterval;
+    let gameStartTime;
+    
+    // AI and Voice Features
+    let voiceReadingEnabled = false;
+    let voiceCommandsEnabled = false;
+    let currentDifficulty = 'beginner';
+    let speechSynthesis = window.speechSynthesis;
+    let speechRecognition;
+    let playerPerformance = [];
+    let adaptiveMode = false;
+    
+    // Initialize Speech Recognition
+    if ('webkitSpeechRecognition' in window) {
+        speechRecognition = new webkitSpeechRecognition();
+        speechRecognition.continuous = false;
+        speechRecognition.interimResults = false;
+        speechRecognition.lang = 'en-US';
+    }
+
+    function setGameMode(mode) {
+        gameMode = mode;
+        adaptiveMode = (mode === 'adaptive');
+        document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
+        event.target.classList.add('active');
+    }
+    
+    // AI and Voice Functions
+    function toggleVoiceReading() {
+        voiceReadingEnabled = !voiceReadingEnabled;
+        const btn = event.target;
+        btn.classList.toggle('active');
+        btn.textContent = voiceReadingEnabled ? '🔊 Voice ON' : '🔊 Read Questions';
+        
+        if (voiceReadingEnabled && gameActive) {
+            speakText(document.getElementById('question').textContent);
+        }
+    }
+    
+    function toggleVoiceCommands() {
+        if (!speechRecognition) {
+            alert('Voice commands not supported in this browser');
+            return;
+        }
+        
+        voiceCommandsEnabled = !voiceCommandsEnabled;
+        const btn = event.target;
+        btn.classList.toggle('active');
+        btn.textContent = voiceCommandsEnabled ? '🎙️ Listening...' : '🎙️ Voice Commands';
+        
+        if (voiceCommandsEnabled) {
+            startVoiceRecognition();
+        } else {
+            speechRecognition.stop();
+        }
+    }
+    
+    function setDifficulty(level) {
+        currentDifficulty = level;
+        document.querySelectorAll('.difficulty-btn').forEach(btn => btn.classList.remove('active'));
+        event.target.classList.add('active');
+        
+        // Filter cards based on difficulty
+        filterCardsByDifficulty();
+    }
+    
+    function speakText(text) {
+        if (!speechSynthesis) return;
+        
+        speechSynthesis.cancel(); // Stop any current speech
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.rate = 0.9;
+        utterance.pitch = 1;
+        utterance.volume = 0.8;
+        
+        // Add visual feedback
+        document.body.classList.add('speaking');
+        utterance.onend = () => {
+            document.body.classList.remove('speaking');
+        };
+        
+        speechSynthesis.speak(utterance);
+    }
+    
+    function startVoiceRecognition() {
+        if (!speechRecognition) return;
+        
+        speechRecognition.onresult = function(event) {
+            const command = event.results[0][0].transcript.toLowerCase();
+            handleVoiceCommand(command);
+        };
+        
+        speechRecognition.onerror = function(event) {
+            console.log('Speech recognition error:', event.error);
+        };
+        
+        speechRecognition.start();
+    }
+    
+    function handleVoiceCommand(command) {
+        if (command.includes('flip') || command.includes('reveal')) {
+            flipCard();
+        } else if (command.includes('next')) {
+            nextCard();
+        } else if (command.includes('correct') || command.includes('right')) {
+            if (isFlipped) answerQuestion(true);
+        } else if (command.includes('wrong') || command.includes('incorrect')) {
+            if (isFlipped) answerQuestion(false);
+        } else if (command.includes('hint')) {
+            getAIHint();
+        } else if (command.includes('repeat')) {
+            if (voiceReadingEnabled) {
+                const text = isFlipped ? 
+                    document.getElementById('answer').textContent : 
+                    document.getElementById('question').textContent;
+                speakText(text);
+            }
+        }
+        
+        // Restart recognition if still enabled
+        if (voiceCommandsEnabled) {
+            setTimeout(() => speechRecognition.start(), 1000);
+        }
+    }
+    
+    function getAIHint() {
+        const currentCard = filteredCards[currentCardIndex];
+        const hints = generateHint(currentCard);
+        
+        document.getElementById('hint-text').textContent = hints;
+        document.getElementById('ai-hint').style.display = 'block';
+        
+        if (voiceReadingEnabled) {
+            speakText('Hint: ' + hints);
+        }
+        
+        // Hide hint after 10 seconds
+        setTimeout(() => {
+            document.getElementById('ai-hint').style.display = 'none';
+        }, 10000);
+    }
+    
+    function generateHint(card) {
+        const hints = {
+            'logistics': [
+                'Think about supply chain management and coordination',
+                'Consider the movement and storage of goods',
+                'Focus on third-party service providers'
+            ],
+            'terms': [
+                'This is a common freight industry abbreviation',
+                'Think about documentation and legal requirements',
+                'Consider transportation and delivery processes'
+            ],
+            'trailers': [
+                'Consider the type of cargo and loading requirements',
+                'Think about size, capacity, and special features',
+                'Focus on the trailer\'s specific design purpose'
+            ],
+            'compliance': [
+                'This relates to government regulations',
+                'Think about safety and legal requirements',
+                'Consider federal transportation agencies'
+            ],
+            'equipment': [
+                'This is a tool or device used in freight operations',
+                'Think about loading and unloading processes',
+                'Consider warehouse and delivery operations'
+            ],
+            'dispatch': [
+                'This involves coordinating shipments and carriers',
+                'Think about the freight broker\'s daily operations',
+                'Consider documentation and communication'
+            ]
+        };
+        
+        const categoryHints = hints[card.category] || ['Think carefully about the freight industry context'];
+        return categoryHints[Math.floor(Math.random() * categoryHints.length)];
+    }
+    
+    function filterCardsByDifficulty() {
+        // Simple difficulty filtering based on answer length and complexity
+        let difficultyCards = [...flashCards];
+        
+        if (currentDifficulty === 'beginner') {
+            difficultyCards = flashCards.filter(card => 
+                card.category === 'terms' || card.category === 'logistics'
+            );
+        } else if (currentDifficulty === 'expert') {
+            difficultyCards = flashCards.filter(card => 
+                card.category === 'compliance' || card.category === 'dispatch'
+            );
+        }
+        
+        filteredCards = difficultyCards;
+        currentCardIndex = 0;
+        if (gameActive) updateCard();
+    }
+    
+    function updateProgress() {
+        if (gameMode === 'quiz') {
+            const progress = (questionsAnswered / 10) * 100;
+            document.getElementById('progress-fill').style.width = progress + '%';
+        } else if (gameMode === 'timed') {
+            const progress = ((60 - timer) / 60) * 100;
+            document.getElementById('progress-fill').style.width = progress + '%';
+        }
+    }
+    
+    function adaptiveDifficultyAdjustment() {
+        if (!adaptiveMode) return;
+        
+        const recentPerformance = playerPerformance.slice(-5);
+        const accuracy = recentPerformance.length > 0 ? 
+            recentPerformance.filter(p => p).length / recentPerformance.length : 0;
+        
+        if (accuracy > 0.8 && currentDifficulty !== 'expert') {
+            // Increase difficulty
+            if (currentDifficulty === 'beginner') {
+                setDifficultyProgrammatically('intermediate');
+            } else {
+                setDifficultyProgrammatically('expert');
+            }
+            speakText('Great job! Increasing difficulty level.');
+        } else if (accuracy < 0.4 && currentDifficulty !== 'beginner') {
+            // Decrease difficulty
+            if (currentDifficulty === 'expert') {
+                setDifficultyProgrammatically('intermediate');
+            } else {
+                setDifficultyProgrammatically('beginner');
+            }
+            speakText('Let\'s try some easier questions.');
+        }
+    }
+    
+    function setDifficultyProgrammatically(level) {
+        currentDifficulty = level;
+        document.querySelectorAll('.difficulty-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelector(`[onclick="setDifficulty('${level}')"]`).classList.add('active');
+        filterCardsByDifficulty();
+    }
+
+    function startGame() {
+        playerName = document.getElementById('player-name').value.trim();
+        if (!playerName) {
+            alert('Please enter your name to start the game!');
+            return;
+        }
+
+        document.getElementById('game-setup').style.display = 'none';
+        document.getElementById('game-area').style.display = 'block';
+        
+        gameActive = true;
+        gameStartTime = Date.now();
+        score = 0;
+        correctAnswers = 0;
+        currentStreak = 0;
+        maxStreak = 0;
+        questionsAnswered = 0;
+        
+        if (gameMode === 'timed') {
+            timer = 60;
+            document.getElementById('timer-card').style.display = 'block';
+            startTimer();
+        } else {
+            document.getElementById('timer-card').style.display = 'none';
+        }
+        
+        shuffleCards();
+        updateCard();
+        updateStats();
+    }
+
+    function startTimer() {
+        timerInterval = setInterval(() => {
+            timer--;
+            document.getElementById('timer').textContent = timer;
+            
+            if (timer <= 0) {
+                endGame();
+            }
+        }, 1000);
+    }
+
+    function updateStats() {
+        document.getElementById('score').textContent = score;
+        document.getElementById('correct').textContent = correctAnswers;
+        document.getElementById('streak').textContent = currentStreak;
+    }
+
+    function updateCard() {
+        if (filteredCards.length === 0) return;
+        
+        const card = filteredCards[currentCardIndex];
+        document.getElementById('question').textContent = card.question;
+        document.getElementById('answer').textContent = card.answer;
+        
+        // Reset card to front side
+        const flashCard = document.getElementById('flash-card');
+        flashCard.classList.remove('flipped');
+        isFlipped = false;
+        
+        // Hide any existing hints
+        document.getElementById('ai-hint').style.display = 'none';
+        
+        // Read question aloud if voice reading is enabled
+        if (voiceReadingEnabled && gameActive) {
+            setTimeout(() => speakText(card.question), 500);
+        }
+        
+        // Update progress bar
+        updateProgress();
+    }
+
+    function flipCard() {
+        const flashCard = document.getElementById('flash-card');
+        flashCard.classList.toggle('flipped');
+        isFlipped = !isFlipped;
+        
+        // Read the answer aloud when card is flipped to back
+        if (voiceReadingEnabled && isFlipped) {
+            setTimeout(() => {
+                const answerText = document.getElementById('answer').textContent;
+                speakText(answerText);
+            }, 700); // Wait for flip animation to complete
+        }
+    }
+
+    function answerQuestion(correct) {
+        if (!gameActive) return;
+        
+        questionsAnswered++;
+        playerPerformance.push(correct);
+        
+        if (correct) {
+            correctAnswers++;
+            currentStreak++;
+            maxStreak = Math.max(maxStreak, currentStreak);
+            
+            // Scoring system
+            let points = 10; // Base points
+            if (currentStreak >= 5) points += 5; // Streak bonus
+            if (gameMode === 'timed') points += 2; // Timed mode bonus
+            
+            score += points;
+            
+            // Voice feedback
+            if (voiceReadingEnabled) {
+                const encouragement = ['Great job!', 'Excellent!', 'Well done!', 'Perfect!'];
+                speakText(encouragement[Math.floor(Math.random() * encouragement.length)]);
+            }
+        } else {
+            currentStreak = 0;
+            
+            // Voice feedback for incorrect answers
+            if (voiceReadingEnabled) {
+                speakText('Keep studying! You\'ll get it next time.');
+            }
+        }
+        
+        updateStats();
+        
+        // Adaptive difficulty adjustment
+        if (questionsAnswered % 5 === 0) {
+            adaptiveDifficultyAdjustment();
+        }
+        
+        // Auto advance to next card
+        setTimeout(() => {
+            nextCard();
+        }, 1000);
+        
+        // Check if quiz mode is complete
+        if (gameMode === 'quiz' && questionsAnswered >= 10) {
+            setTimeout(() => {
+                endGame();
+            }, 1500);
+        }
+    }
+
+    function nextCard() {
+        if (filteredCards.length === 0) return;
+        currentCardIndex = (currentCardIndex + 1) % filteredCards.length;
+        updateCard();
+    }
+
+    function shuffleCards() {
+        for (let i = filteredCards.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [filteredCards[i], filteredCards[j]] = [filteredCards[j], filteredCards[i]];
+        }
+        currentCardIndex = 0;
+    }
+
+    function filterCards(category) {
+        document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+        event.target.classList.add('active');
+        
+        if (category === 'all') {
+            filteredCards = [...flashCards];
+        } else {
+            filteredCards = flashCards.filter(card => card.category === category);
+        }
+        
+        currentCardIndex = 0;
+        updateCard();
+    }
+
+    function endGame() {
+        gameActive = false;
+        if (timerInterval) {
+            clearInterval(timerInterval);
+        }
+        
+        document.getElementById('game-area').style.display = 'none';
+        document.getElementById('game-over').style.display = 'block';
+        
+        document.getElementById('final-score').textContent = score;
+        
+        // Performance message
+        let message = '';
+        const accuracy = questionsAnswered > 0 ? (correctAnswers / questionsAnswered * 100).toFixed(1) : 0;
+        
+        if (accuracy >= 90) {
+            message = `🌟 Outstanding! ${accuracy}% accuracy with a max streak of ${maxStreak}!`;
+        } else if (accuracy >= 75) {
+            message = `🎯 Great job! ${accuracy}% accuracy. Keep up the good work!`;
+        } else if (accuracy >= 60) {
+            message = `📚 Good effort! ${accuracy}% accuracy. Review and try again!`;
+        } else {
+            message = `💪 Keep studying! ${accuracy}% accuracy. Practice makes perfect!`;
+        }
+        
+        document.getElementById('performance-message').innerHTML = message;
+        
+        // Save to leaderboard
+        saveScore();
+    }
+
+    function saveScore() {
+        const gameData = {
+            name: playerName,
+            score: score,
+            correct: correctAnswers,
+            total: questionsAnswered,
+            accuracy: questionsAnswered > 0 ? (correctAnswers / questionsAnswered * 100).toFixed(1) : 0,
+            maxStreak: maxStreak,
+            mode: gameMode,
+            date: new Date().toLocaleDateString()
+        };
+        
+        let leaderboard = JSON.parse(localStorage.getItem('sioxLogisticsLeaderboard') || '[]');
+        leaderboard.push(gameData);
+        leaderboard.sort((a, b) => b.score - a.score);
+        leaderboard = leaderboard.slice(0, 10); // Keep top 10
+        
+        localStorage.setItem('sioxLogisticsLeaderboard', JSON.stringify(leaderboard));
+    }
+
+    function viewLeaderboard() {
+        document.getElementById('game-over').style.display = 'none';
+        document.getElementById('leaderboard-view').style.display = 'block';
+        
+        const leaderboard = JSON.parse(localStorage.getItem('sioxLogisticsLeaderboard') || '[]');
+        const leaderboardList = document.getElementById('leaderboard-list');
+        
+        if (leaderboard.length === 0) {
+            leaderboardList.innerHTML = '<p style="text-align: center; opacity: 0.7;">No scores yet. Be the first!</p>';
+            return;
+        }
+        
+        leaderboardList.innerHTML = leaderboard.map((entry, index) => `
+            <div class="leaderboard-entry ${entry.name === playerName ? 'current-player' : ''}">
+                <div>
+                    <span class="rank">#${index + 1}</span>
+                    <strong>${entry.name}</strong>
+                    <small>(${entry.mode})</small>
+                </div>
+                <div>
+                    <strong>${entry.score} pts</strong>
+                    <small>${entry.accuracy}% accuracy</small>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function hideLeaderboard() {
+        document.getElementById('leaderboard-view').style.display = 'none';
+        document.getElementById('game-over').style.display = 'block';
+    }
+
+    function playAgain() {
+        document.getElementById('game-over').style.display = 'none';
+        document.getElementById('game-setup').style.display = 'block';
+        document.getElementById('player-name').value = playerName;
+    }
+
+    // Allow clicking on card to flip it
+    document.getElementById('flash-card').addEventListener('click', flipCard);
+
+    // Keyboard navigation
+    document.addEventListener('keydown', function(event) {
+        if (!gameActive) return;
+        
+        switch(event.key) {
+            case ' ':
+            case 'Enter':
+                event.preventDefault();
+                flipCard();
+                break;
+            case '1':
+                if (isFlipped) answerQuestion(true);
+                break;
+            case '2':
+                if (isFlipped) answerQuestion(false);
+                break;
+        }
+    });
+
+    // Initialize
+    updateCard();
+</script>
+
+</html>
