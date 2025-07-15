@@ -18,25 +18,20 @@
         color: white;
     }
 
-    .logo {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 15px;
-        margin-bottom: 15px;
-    }
-
-    .logo-icon {
-        width: 60px;
-        height: 60px;
-        background: linear-gradient(135deg, #ff6b35, #f7931e);
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 2rem;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-    }
+    .logo-img {
+    height: 70px;
+    width: auto;
+    object-fit: contain;
+    display: block;
+    margin-right: 18px;
+}
+.logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    margin-bottom: 15px;
+}
 
     .company-name {
         font-size: 2.2rem;
@@ -464,8 +459,7 @@
     <body>
     <div class="header">
         <div class="logo">
-            <!-- Replace 'logo.png' with your actual logo file path -->
-            <img src="img/siox white logo.png" alt="Company Logo" class="logo-icon" />
+            <img src="img\siox white logo.png" alt="SIOX GLOBAL Logo" class="logo-img" />
             <span class="company-name">SIOX Logistics LLC Training</span>
         </div>
         <div class="tagline">Master Freight & Logistics Knowledge</div>
@@ -526,6 +520,16 @@
         <button class="filter-btn" onclick="filterCards('compliance')">Compliance</button>
         <button class="filter-btn" onclick="filterCards('equipment')">Equipment</button>
         <button class="filter-btn" onclick="filterCards('dispatch')">Dispatch</button>
+        <button class="filter-btn" onclick="filterCards('terms')">State Abbreviations</button>
+        <button class="filter-btn" onclick="filterCards('phonetic')">Phonetics</button>
+        <button class="filter-btn" onclick="filterCards('fterms')">Industry Abbreviation</button>
+        <button class="filter-btn" onclick="filterCards('equipment')">Truck & Trailer Types</button>
+        <button class="filter-btn" onclick="filterCards('payment')">Payment Types</button>
+        <button class="filter-btn" onclick="filterCards('accessorial')">Accessorial Charges</button>
+        <button class="filter-btn" onclick="filterCards('insurance')">Insuarance</button>
+        <button class="filter-btn" onclick="filterCards('permits')">OS/OW Permits</button>
+        <button class="filter-btn" onclick="filterCards('shipping')">Blind Shipment</button>
+        
     </div>
 
     <div id="ai-hint" class="ai-hint">
@@ -539,34 +543,22 @@
   <div class="flash-card-container">
     <div class="flash-card" id="flash-card">
         <div class="card-face card-front">
-            <div class="card-content" style="display: flex; align-items: flex-start; gap: 32px;">
-    <div style="flex: 2;">
+            <div class="card-content" style="display: flex; flex-direction: column; align-items: center; gap: 24px;">
         <h2 id="question">What does 3PL stand for?</h2>
-        <div class="answer-buttons" id="answer-buttons" style="display: none;">
-            <button class="answer-btn correct-btn" onclick="answerQuestion(true)">✓ I Know This</button>
-            <button class="answer-btn incorrect-btn" onclick="answerQuestion(false)">✗ Need to Study</button>
+        <input type="text" id="user-answer" placeholder="Type your answer here..." style="padding:16px; border-radius:12px; width:96%; font-size:1.2rem; min-height:48px;">
+        <div class="answer-buttons">
+            <button class="answer-btn btn-primary" onclick="submitAnswer()">Submit Answer</button>
         </div>
     </div>
-    <div id="voice-transcript" style="flex: 1.5; max-width: 320px; min-width: 220px; background:rgba(255,255,255,0.12);color:white;padding:22px 18px;border-radius:16px;min-height:60px;box-shadow:0 2px 12px rgba(0,0,0,0.12);font-size:1.15rem;">
-        <strong>🎤 Transcript:</strong>
-        <span id="transcript-text"></span>
+        </div>
+       <div class="card-face card-back">
+    <div class="card-content">
+        <p id="answer">Third-Party Logistics - a service provider that manages logistics operations for other companies.</p>
     </div>
 </div>
-        </div>
-        <div class="card-face card-back">
-            <div class="card-content">
-                <p id="answer">Third-Party Logistics - a service provider that manages logistics operations for other companies.</p>
-                <div class="answer-buttons">
-                    <button class="answer-btn correct-btn" onclick="answerQuestion(true)">✓ Got It Right!</button>
-                    <button class="answer-btn incorrect-btn" onclick="answerQuestion(false)">✗ Missed This One</button>
-                </div>
-            </div>
-        </div>
     </div>
 </div>
     <div class="controls">
-        <button class="btn btn-primary" onclick="flipCard()">Reveal Answer</button>
-        <button class="btn btn-primary" onclick="startVoiceAnswer()">🎤 Answer by Voice</button>
         <button class="btn btn-secondary" onclick="nextCard()">Next Question</button>
         <button class="btn btn-secondary" onclick="endGame()">End Game</button>
     </div>
@@ -578,6 +570,8 @@
     <div id="performance-message"></div>
     <button class="btn btn-primary" onclick="playAgain()" style="margin: 20px 10px;">Play Again</button>
     <button class="btn btn-secondary" onclick="viewLeaderboard()">View Leaderboard</button>
+    <button class="btn btn-secondary" onclick="downloadAnswersPDF()">Download PDF</button>
+    <button class="btn btn-primary" onclick="sendAnswersByEmail()">Send to Examiner</button>
 </div>
 
 <div id="leaderboard-view" class="leaderboard" style="display: none;">
@@ -586,8 +580,208 @@
     <button class="btn btn-primary" onclick="hideLeaderboard()" style="margin-top: 20px;">Back to Game</button>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
     const flashCards = [
+// All US States: Abbreviation <-> Full Name
+  { question: "What is the abbreviation for Alabama?", answer: "AL", category: "terms" },
+  { question: "Which state uses the abbreviation AL?", answer: "Alabama", category: "terms" },
+  { question: "What is the abbreviation for Alaska?", answer: "AK", category: "terms" },
+  { question: "Which state uses the abbreviation AK?", answer: "Alaska", category: "terms" },
+  { question: "What is the abbreviation for Arizona?", answer: "AZ", category: "terms" },
+  { question: "Which state uses the abbreviation AZ?", answer: "Arizona", category: "terms" },
+  { question: "What is the abbreviation for Arkansas?", answer: "AR", category: "terms" },
+  { question: "Which state uses the abbreviation AR?", answer: "Arkansas", category: "terms" },
+  { question: "What is the abbreviation for California?", answer: "CA", category: "terms" },
+  { question: "Which state uses the abbreviation CA?", answer: "California", category: "terms" },
+  { question: "What is the abbreviation for Colorado?", answer: "CO", category: "terms" },
+  { question: "Which state uses the abbreviation CO?", answer: "Colorado", category: "terms" },
+  { question: "What is the abbreviation for Connecticut?", answer: "CT", category: "terms" },
+  { question: "Which state uses the abbreviation CT?", answer: "Connecticut", category: "terms" },
+  { question: "What is the abbreviation for Delaware?", answer: "DE", category: "terms" },
+  { question: "Which state uses the abbreviation DE?", answer: "Delaware", category: "terms" },
+  { question: "What is the abbreviation for Florida?", answer: "FL", category: "terms" },
+  { question: "Which state uses the abbreviation FL?", answer: "Florida", category: "terms" },
+  { question: "What is the abbreviation for Georgia?", answer: "GA", category: "terms" },
+  { question: "Which state uses the abbreviation GA?", answer: "Georgia", category: "terms" },
+  { question: "What is the abbreviation for Hawaii?", answer: "HI", category: "terms" },
+  { question: "Which state uses the abbreviation HI?", answer: "Hawaii", category: "terms" },
+  { question: "What is the abbreviation for Idaho?", answer: "ID", category: "terms" },
+  { question: "Which state uses the abbreviation ID?", answer: "Idaho", category: "terms" },
+  { question: "What is the abbreviation for Illinois?", answer: "IL", category: "terms" },
+  { question: "Which state uses the abbreviation IL?", answer: "Illinois", category: "terms" },
+  { question: "What is the abbreviation for Indiana?", answer: "IN", category: "terms" },
+  { question: "Which state uses the abbreviation IN?", answer: "Indiana", category: "terms" },
+  { question: "What is the abbreviation for Iowa?", answer: "IA", category: "terms" },
+  { question: "Which state uses the abbreviation IA?", answer: "Iowa", category: "terms" },
+  { question: "What is the abbreviation for Kansas?", answer: "KS", category: "terms" },
+  { question: "Which state uses the abbreviation KS?", answer: "Kansas", category: "terms" },
+  { question: "What is the abbreviation for Kentucky?", answer: "KY", category: "terms" },
+  { question: "Which state uses the abbreviation KY?", answer: "Kentucky", category: "terms" },
+  { question: "What is the abbreviation for Louisiana?", answer: "LA", category: "terms" },
+  { question: "Which state uses the abbreviation LA?", answer: "Louisiana", category: "terms" },
+  { question: "What is the abbreviation for Maine?", answer: "ME", category: "terms" },
+  { question: "Which state uses the abbreviation ME?", answer: "Maine", category: "terms" },
+  { question: "What is the abbreviation for Maryland?", answer: "MD", category: "terms" },
+  { question: "Which state uses the abbreviation MD?", answer: "Maryland", category: "terms" },
+  { question: "What is the abbreviation for Massachusetts?", answer: "MA", category: "terms" },
+  { question: "Which state uses the abbreviation MA?", answer: "Massachusetts", category: "terms" },
+  { question: "What is the abbreviation for Michigan?", answer: "MI", category: "terms" },
+  { question: "Which state uses the abbreviation MI?", answer: "Michigan", category: "terms" },
+  { question: "What is the abbreviation for Minnesota?", answer: "MN", category: "terms" },
+  { question: "Which state uses the abbreviation MN?", answer: "Minnesota", category: "terms" },
+  { question: "What is the abbreviation for Mississippi?", answer: "MS", category: "terms" },
+  { question: "Which state uses the abbreviation MS?", answer: "Mississippi", category: "terms" },
+  { question: "What is the abbreviation for Missouri?", answer: "MO", category: "terms" },
+  { question: "Which state uses the abbreviation MO?", answer: "Missouri", category: "terms" },
+  { question: "What is the abbreviation for Montana?", answer: "MT", category: "terms" },
+  { question: "Which state uses the abbreviation MT?", answer: "Montana", category: "terms" },
+  { question: "What is the abbreviation for Nebraska?", answer: "NE", category: "terms" },
+  { question: "Which state uses the abbreviation NE?", answer: "Nebraska", category: "terms" },
+  { question: "What is the abbreviation for Nevada?", answer: "NV", category: "terms" },
+  { question: "Which state uses the abbreviation NV?", answer: "Nevada", category: "terms" },
+  { question: "What is the abbreviation for New Hampshire?", answer: "NH", category: "terms" },
+  { question: "Which state uses the abbreviation NH?", answer: "New Hampshire", category: "terms" },
+  { question: "What is the abbreviation for New Jersey?", answer: "NJ", category: "terms" },
+  { question: "Which state uses the abbreviation NJ?", answer: "New Jersey", category: "terms" },
+  { question: "What is the abbreviation for New Mexico?", answer: "NM", category: "terms" },
+  { question: "Which state uses the abbreviation NM?", answer: "New Mexico", category: "terms" },
+  { question: "What is the abbreviation for New York?", answer: "NY", category: "terms" },
+  { question: "Which state uses the abbreviation NY?", answer: "New York", category: "terms" },
+  { question: "What is the abbreviation for North Carolina?", answer: "NC", category: "terms" },
+  { question: "Which state uses the abbreviation NC?", answer: "North Carolina", category: "terms" },
+  { question: "What is the abbreviation for North Dakota?", answer: "ND", category: "terms" },
+  { question: "Which state uses the abbreviation ND?", answer: "North Dakota", category: "terms" },
+  { question: "What is the abbreviation for Ohio?", answer: "OH", category: "terms" },
+  { question: "Which state uses the abbreviation OH?", answer: "Ohio", category: "terms" },
+  { question: "What is the abbreviation for Oklahoma?", answer: "OK", category: "terms" },
+  { question: "Which state uses the abbreviation OK?", answer: "Oklahoma", category: "terms" },
+  { question: "What is the abbreviation for Oregon?", answer: "OR", category: "terms" },
+  { question: "Which state uses the abbreviation OR?", answer: "Oregon", category: "terms" },
+  { question: "What is the abbreviation for Pennsylvania?", answer: "PA", category: "terms" },
+  { question: "Which state uses the abbreviation PA?", answer: "Pennsylvania", category: "terms" },
+  { question: "What is the abbreviation for Rhode Island?", answer: "RI", category: "terms" },
+  { question: "Which state uses the abbreviation RI?", answer: "Rhode Island", category: "terms" },
+  { question: "What is the abbreviation for South Carolina?", answer: "SC", category: "terms" },
+  { question: "Which state uses the abbreviation SC?", answer: "South Carolina", category: "terms" },
+  { question: "What is the abbreviation for South Dakota?", answer: "SD", category: "terms" },
+  { question: "Which state uses the abbreviation SD?", answer: "South Dakota", category: "terms" },
+  { question: "What is the abbreviation for Tennessee?", answer: "TN", category: "terms" },
+  { question: "Which state uses the abbreviation TN?", answer: "Tennessee", category: "terms" },
+  { question: "What is the abbreviation for Texas?", answer: "TX", category: "terms" },
+  { question: "Which state uses the abbreviation TX?", answer: "Texas", category: "terms" },
+  { question: "What is the abbreviation for Utah?", answer: "UT", category: "terms" },
+  { question: "Which state uses the abbreviation UT?", answer: "Utah", category: "terms" },
+  { question: "What is the abbreviation for Vermont?", answer: "VT", category: "terms" },
+  { question: "Which state uses the abbreviation VT?", answer: "Vermont", category: "terms" },
+  { question: "What is the abbreviation for Virginia?", answer: "VA", category: "terms" },
+  { question: "Which state uses the abbreviation VA?", answer: "Virginia", category: "terms" },
+  { question: "What is the abbreviation for Washington?", answer: "WA", category: "terms" },
+  { question: "Which state uses the abbreviation WA?", answer: "Washington", category: "terms" },
+  { question: "What is the abbreviation for West Virginia?", answer: "WV", category: "terms" },
+  { question: "Which state uses the abbreviation WV?", answer: "West Virginia", category: "terms" },
+  { question: "What is the abbreviation for Wisconsin?", answer: "WI", category: "terms" },
+  { question: "Which state uses the abbreviation WI?", answer: "Wisconsin", category: "terms" },
+  { question: "What is the abbreviation for Wyoming?", answer: "WY", category: "terms" },
+  { question: "Which state uses the abbreviation WY?", answer: "Wyoming", category: "terms" },
+    
+  // Industry Abreviations
+
+ { question: "What does FMCSA stand for?", answer: "Federal Motor Carrier Safety Administration", category: "fterms" },
+  { question: "What does DOT stand for?", answer: "Department of Transportation", category: "fterms" },
+  { question: "What does MC Number stand for?", answer: "Motor Carrier Number", category: "fterms" },
+  { question: "What does SCAC stand for?", answer: "Standard Carrier Alpha Code", category: "fterms" },
+  { question: "What does BOL stand for?", answer: "Bill of Lading", category: "fterms" },
+  { question: "What does POD stand for?", answer: "Proof of Delivery", category: "fterms" },
+  { question: "What does LTL mean?", answer: "Less Than Truckload", category: "fterms" },
+  { question: "What does TL/FTL mean?", answer: "Full Truckload / Truckload", category: "fterms" },
+  { question: "What does DR stand for?", answer: "Delivery Receipt", category: "fterms" },
+  { question: "What does ETA mean?", answer: "Estimated Time of Arrival", category: "fterms" },
+  { question: "What does ETD mean?", answer: "Estimated Time of Departure", category: "fterms" },
+  { question: "What does EDI stand for?", answer: "Electronic Data Interchange", category: "fterms" },
+  { question: "What does TMS stand for?", answer: "Transportation Management System", category: "fterms" },
+  { question: "What does 3PL stand for?", answer: "Third-Party Logistics", category: "fterms" },
+  { question: "What does 4PL stand for?", answer: "Fourth-Party Logistics", category: "fterms" },
+  { question: "What does FOB mean?", answer: "Free On Board", category: "fterms" },
+  { question: "What does FSC stand for?", answer: "Fuel Surcharge", category: "fterms" },
+  { question: "What does OOS stand for?", answer: "Out of Service", category: "fterms" },
+  { question: "What does ELD stand for?", answer: "Electronic Logging Device", category: "fterms" },
+  { question: "What does HOS stand for?", answer: "Hours of Service", category: "fterms" },
+  { question: "What does OO or O/O mean?", answer: "Owner-Operator", category: "fterms" },
+  { question: "What does IRP stand for?", answer: "International Registration Plan", category: "fterms" },
+  { question: "What does IFTA stand for?", answer: "International Fuel Tax Agreement", category: "fterms" },
+  { question: "What does TWIC stand for?", answer: "Transportation Worker Identification Credential", category: "fterms" },
+  { question: "What does CSA stand for?", answer: "Compliance, Safety, Accountability", category: "fterms" },
+  { question: "What does APPT mean?", answer: "Appointment", category: "fterms" },
+  { question: "What does PPE stand for?", answer: "Personal Protection Equipment", category: "fterms" },
+  { question: "What does COI stand for?", answer: "Certificate of Insurance", category: "fterms" },
+  { question: "What does DBA mean?", answer: "Doing Business As", category: "fterms" },
+  { question: "What does DAT stand for?", answer: "Dial-A-Truck", category: "fterms" },
+  { question: "What does FCFS mean?", answer: "First Come, First Serve", category: "fterms" },
+  { question: "What does FC mean in freight?", answer: "Factoring Company", category: "fterms" },
+  { question: "What does NOA mean?", answer: "Notice of Assignment", category: "fterms" },
+  { question: "What does RPM stand for?", answer: "Rate Per Mile", category: "fterms" },
+  { question: "What does OTR mean?", answer: "Over the Road", category: "fterms" },
+  { question: "What is an Empty Scale Ticket?", answer: "A ticket showing the truck's weight before loading", category: "fterms" },
+  { question: "What does ITS stand for?", answer: "Internet Truckstop", category: "fterms" },
+  { question: "What does TS stand for?", answer: "Truck Stop", category: "fterms" },
+  { question: "What does VIN# stand for?", answer: "Vehicle Identification Number", category: "fterms" },
+  { question: "What does LOR stand for?", answer: "Letter of Release", category: "fterms" },
+  { question: "What does BIPD stand for?", answer: "Bodily Injury and Property Damage", category: "fterms" },
+  { question: "What is a truck door picture?", answer: "A photo showing truck door info like USDOT and MC#", category: "fterms" },
+  { question: "What is a COI Holder?", answer: "The person/company listed on the COI to receive updates", category: "fterms" },
+  { question: "What is a Heavy Scale Ticket?", answer: "A ticket showing total truck weight after loading", category: "fterms" },
+  { question: "What is a Coast to Coast Shipment?", answer: "Freight transported across the U.S. from East to West or vice versa", category: "fterms" },
+  { question: "What does RC stand for in freight?", answer: "Rate Confirmation", category: "fterms" },
+
+
+  // Military Phonetic Alphabet
+   { question: "What is the military phonetic for A?", answer: "Alpha", category: "phonetic" },
+  { question: "What is the military phonetic for B?", answer: "Bravo", category: "phonetic" },
+  { question: "What is the military phonetic for C?", answer: "Charlie", category: "phonetic" },
+  { question: "What is the military phonetic for D?", answer: "Delta", category: "phonetic" },
+  { question: "What is the military phonetic for E?", answer: "Echo", category: "phonetic" },
+  { question: "What is the military phonetic for F?", answer: "Foxtrot", category: "phonetic" },
+  { question: "What is the military phonetic for G?", answer: "Golf", category: "phonetic" },
+  { question: "What is the military phonetic for H?", answer: "Hotel", category: "phonetic" },
+  { question: "What is the military phonetic for I?", answer: "India", category: "phonetic" },
+  { question: "What is the military phonetic for J?", answer: "Juliett", category: "phonetic" },
+  { question: "What is the military phonetic for K?", answer: "Kilo", category: "phonetic" },
+  { question: "What is the military phonetic for L?", answer: "Lima", category: "phonetic" },
+  { question: "What is the military phonetic for M?", answer: "Mike", category: "phonetic" },
+  { question: "What is the military phonetic for N?", answer: "November", category: "phonetic" },
+  { question: "What is the military phonetic for O?", answer: "Oscar", category: "phonetic" },
+  { question: "What is the military phonetic for P?", answer: "Papa", category: "phonetic" },
+  { question: "What is the military phonetic for Q?", answer: "Quebec", category: "phonetic" },
+  { question: "What is the military phonetic for R?", answer: "Romeo", category: "phonetic" },
+  { question: "What is the military phonetic for S?", answer: "Sierra", category: "phonetic" },
+  { question: "What is the military phonetic for T?", answer: "Tango", category: "phonetic" },
+  { question: "What is the military phonetic for U?", answer: "Uniform", category: "phonetic" },
+  { question: "What is the military phonetic for V?", answer: "Victor", category: "phonetic" },
+  { question: "What is the military phonetic for W?", answer: "Whiskey", category: "phonetic" },
+  { question: "What is the military phonetic for X?", answer: "X-ray", category: "phonetic" },
+  { question: "What is the military phonetic for Y?", answer: "Yankee", category: "phonetic" },
+  { question: "What is the military phonetic for Z?", answer: "Zulu", category: "phonetic" },
+
+  // Truck & Trailer Types
+  { question: "What does F stand for in trailer types?", answer: "Flatbed", category: "equipment" },
+  { question: "What does SD stand for in trailer types?", answer: "Step Deck", category: "equipment" },
+  { question: "What does V stand for in trailer types?", answer: "Van", category: "equipment" },
+  { question: "What does R stand for in trailer types?", answer: "Reefer", category: "equipment" },
+  { question: "What does CONG stand for in trailer types?", answer: "Conestoga", category: "equipment" },
+  { question: "What does DD stand for in trailer types?", answer: "Double Drop", category: "equipment" },
+  { question: "What does FSD stand for in trailer types?", answer: "Flatbed or Step Deck", category: "equipment" },
+  { question: "What does HS stand for in trailer types?", answer: "Hotshot", category: "equipment" },
+  { question: "What does PO stand for in trailer types?", answer: "Power Only", category: "equipment" },
+  { question: "What does RGN stand for in trailer types?", answer: "Removable Gooseneck", category: "equipment" },
+  { question: "What does LB stand for in trailer types?", answer: "Low Boy", category: "equipment" },
+  { question: "What does VV stand for in trailer types?", answer: "Vented Van", category: "equipment" },
+  { question: "What does BT stand for in trailer types?", answer: "Box Truck", category: "equipment" },
+  { question: "What does SV stand for in trailer types?", answer: "Sprinter Van", category: "equipment" },
+  { question: "What is a SUPER-B or MAXI TRAILER?", answer: "High-capacity trailer configuration often used in Canada", category: "equipment" },
+  { question: "What is a STRETCHED or EXTENDED TRAILER?", answer: "Trailer with adjustable length for oversized loads", category: "equipment" },
+  { question: "What does DUMP mean in truck types?", answer: "Dump Truck", category: "equipment" },
+
         // General Logistics & 3PL
         { question: "What does 3PL stand for?", answer: "Third-Party Logistics - a service provider that manages logistics operations for other companies, including warehousing, transportation, and distribution services.", category: "logistics" },
         { question: "How does a 3PL differ from a 1PL or 2PL?", answer: "1PL is the shipper managing their own logistics, 2PL is basic transportation services, while 3PL provides comprehensive logistics services including warehousing, inventory management, and transportation coordination.", category: "logistics" },
@@ -645,8 +839,57 @@
         { question: "What is a detention charge?", answer: "A fee charged when a truck is held beyond the agreed free time for loading or unloading (typically 2 hours), compensating the carrier for lost productivity.", category: "terms" },
         { question: "What does 'spot market' mean in freight?", answer: "Immediate freight transactions where loads are booked for current or near-term shipping needs, as opposed to contract rates for ongoing arrangements.", category: "terms" },
         { question: "What is a lumper fee?", answer: "A charge for third-party workers (lumpers) hired to load or unload freight instead of the truck driver, common at grocery distribution centers.", category: "terms" },
-        { question: "What does FOB stand for?", answer: "Free On Board or Freight On Board - indicates the point at which ownership and liability for goods transfer from seller to buyer during shipping.", category: "terms" }
-    ];
+        { question: "What does FOB stand for?", answer: "Free On Board or Freight On Board - indicates the point at which ownership and liability for goods transfer from seller to buyer during shipping.", category: "terms" },
+
+        // Payment Types
+  { question: "What is a Regular Payment in logistics?", answer: "Payment made after net 28–30 days of receiving BOL/POD", category: "payment" },
+  { question: "What is Quick Payment in freight?", answer: "Payment made within 3–4 business days with 4% deduction", category: "payment" },
+  { question: "What is a Factoring Company (FC)?", answer: "A financial firm that buys carrier invoices and gets paid directly by brokers", category: "payment" },
+  { question: "What is a Notice of Assignment (NOA)?", answer: "Document stating invoice rights are assigned to a factoring company", category: "payment" },
+
+  // FMCSA Rules & Driver Hours
+  { question: "Who regulates commercial motor vehicles in the U.S.?", answer: "FMCSA (Federal Motor Carrier Safety Administration)", category: "compliance" },
+  { question: "What is the 11-Hour Driving Limit rule?", answer: "Driver may drive max 11 hours after 10 consecutive hours off duty", category: "compliance" },
+  { question: "What is the 14-Hour Limit rule?", answer: "Driver can’t drive after 14 hours on duty, including breaks", category: "compliance" },
+  { question: "What is the 30-Minute Break rule?", answer: "Driver must take a break after 8 hours of driving", category: "compliance" },
+  { question: "What is the 60/70-Hour Limit?", answer: "Driver can’t drive after 60/70 hours on duty in 7/8 days", category: "compliance" },
+  { question: "What is the 34-Hour Restart?", answer: "Allows driver to reset 60/70-hour clock after 34 hours off duty", category: "compliance" },
+
+  // Accessorial Charges
+  { question: "What is TONU?", answer: "Truck Ordered Not Used — paid when load is cancelled after dispatch", category: "accessorial" },
+  { question: "What is Detention Pay?", answer: "Paid for driver wait time beyond free loading/unloading period", category: "accessorial" },
+  { question: "What is a Layover Fee?", answer: "Daily fee for overnight delay due to scheduling issues", category: "accessorial" },
+  { question: "What is a Lumper Fee?", answer: "Fee paid to third-party labor to load/unload freight", category: "accessorial" },
+
+  // Insurance Types
+  { question: "What does Auto Insurance cover in trucking?", answer: "Liability for accidents/damage to truck and trailer", category: "insurance" },
+  { question: "What is Cargo Insurance?", answer: "Covers loss/damage/theft of freight during transit", category: "insurance" },
+  { question: "What is General Liability Insurance?", answer: "Covers damage or injury on customer property", category: "insurance" },
+  { question: "What is Umbrella Insurance?", answer: "Adds extra coverage above standard policy limits", category: "insurance" },
+  { question: "What is Occupational Accident Insurance (OCA)?", answer: "Covers medical/disability for independent contractors", category: "insurance" },
+  { question: "What is Workers’ Compensation?", answer: "Covers employees injured on the job", category: "insurance" },
+
+  // BMC-84 Bond
+  { question: "What is the BMC-84 Surety Bond?", answer: "$75,000 bond required by FMCSA for freight brokers", category: "compliance" },
+  { question: "Why is the BMC-84 important?", answer: "Protects carriers/shippers from broker non-payment", category: "compliance" },
+
+  // Double Brokering
+  { question: "What is Double Brokering?", answer: "A carrier accepts a load then re-brokers it under another MC#", category: "compliance" },
+  { question: "How do you prevent Double Brokering?", answer: "Verify VIN, door pic, email, and SaferWatch profile", category: "compliance" },
+
+  // Blind Shipment Types
+  { question: "What is a Single Blind Shipment?", answer: "Receiver doesn’t know the shipper", category: "shipping" },
+  { question: "What is a Double Blind Shipment?", answer: "Shipper and receiver don’t know each other", category: "shipping" },
+  { question: "What is a Triple Blind Shipment?", answer: "Shipper, receiver, and carrier don’t know each other", category: "shipping" },
+
+  // TWIC Card
+  { question: "What is a TWIC Card?", answer: "Credential for port access, verifying background checks", category: "compliance" },
+
+  // OS/OW Permits
+  { question: "What is a Single Trip Permit?", answer: "One-time OS/OW authorization for specific dates/routes", category: "permits" },
+  { question: "What is an Annual/Blanket Permit?", answer: "For frequent OS/OW hauls, valid for multiple trips", category: "permits" },
+  { question: "What is a Superload Permit?", answer: "Required for loads over 150,000 lbs, 16ft wide/high", category: "permits" }
+ ];
 
     let currentCardIndex = 0;
     let isFlipped = false;
@@ -671,6 +914,7 @@
     let speechRecognition;
     let playerPerformance = [];
     let adaptiveMode = false;
+    let userAnswers = [];
     
     // Initialize Speech Recognition
     if ('webkitSpeechRecognition' in window) {
@@ -984,29 +1228,29 @@
         document.getElementById('streak').textContent = currentStreak;
     }
 
-    function updateCard() {
-        if (filteredCards.length === 0) return;
-        
-        const card = filteredCards[currentCardIndex];
-        document.getElementById('question').textContent = card.question;
-        document.getElementById('answer').textContent = card.answer;
-        
-        // Reset card to front side
-        const flashCard = document.getElementById('flash-card');
-        flashCard.classList.remove('flipped');
-        isFlipped = false;
-        
-        // Hide any existing hints
-        document.getElementById('ai-hint').style.display = 'none';
-        
-        // Read question aloud if voice reading is enabled
-        if (voiceReadingEnabled && gameActive) {
-            setTimeout(() => speakText(card.question), 500);
-        }
-        
-        // Update progress bar
-        updateProgress();
+function updateCard() {
+    if (filteredCards.length === 0) return;
+    const card = filteredCards[currentCardIndex];
+    document.getElementById('question').textContent = card.question;
+    document.getElementById('user-answer').value = userAnswers[currentCardIndex] || '';
+    document.getElementById('answer').textContent = card.answer; // <-- Add this line
+
+    // Reset card to front side
+    const flashCard = document.getElementById('flash-card');
+    flashCard.classList.remove('flipped');
+    isFlipped = false;
+
+    // Hide any existing hints
+    document.getElementById('ai-hint').style.display = 'none';
+
+    // Read question aloud if voice reading is enabled
+    if (voiceReadingEnabled && gameActive) {
+        setTimeout(() => speakText(card.question), 500);
     }
+
+    // Update progress bar
+    updateProgress();
+}
 
     function flipCard() {
         const flashCard = document.getElementById('flash-card');
@@ -1103,36 +1347,27 @@
     }
 
     function endGame() {
-        gameActive = false;
-        if (timerInterval) {
-            clearInterval(timerInterval);
-        }
-        
-        document.getElementById('game-area').style.display = 'none';
-        document.getElementById('game-over').style.display = 'block';
-        
-        document.getElementById('final-score').textContent = score;
-        
-        // Performance message
-        let message = '';
-        const accuracy = questionsAnswered > 0 ? (correctAnswers / questionsAnswered * 100).toFixed(1) : 0;
-        
-        if (accuracy >= 90) {
-            message = `🌟 Outstanding! ${accuracy}% accuracy with a max streak of ${maxStreak}!`;
-        } else if (accuracy >= 75) {
-            message = `🎯 Great job! ${accuracy}% accuracy. Keep up the good work!`;
-        } else if (accuracy >= 60) {
-            message = `📚 Good effort! ${accuracy}% accuracy. Review and try again!`;
-        } else {
-            message = `💪 Keep studying! ${accuracy}% accuracy. Practice makes perfect!`;
-        }
-        
-        document.getElementById('performance-message').innerHTML = message;
-        
-        // Save to leaderboard
-        saveScore();
-    }
+    gameActive = false;
+    if (timerInterval) clearInterval(timerInterval);
 
+    document.getElementById('game-area').style.display = 'none';
+    document.getElementById('game-over').style.display = 'block';
+
+    let correctCount = 0;
+    let resultsHtml = '<h3>Your Results:</h3><ul style="text-align:left;">';
+    filteredCards.forEach((card, idx) => {
+        const userAns = (userAnswers[idx] || '').trim().toLowerCase();
+        const correctAns = card.answer.trim().toLowerCase();
+        const isCorrect = userAns === correctAns;
+        if (isCorrect) correctCount++;
+        resultsHtml += `<li><strong>Q${idx+1}:</strong> ${card.question}<br>
+            <span style="color:${isCorrect?'#43e97b':'#ff416c'};">Your answer: ${userAnswers[idx]||''}</span>
+            <br><span style="opacity:0.7;">Correct: ${card.answer}</span></li><br>`;
+    });
+    resultsHtml += '</ul>';
+    resultsHtml += `<div class="final-score">Score: ${correctCount} / ${filteredCards.length}</div>`;
+    document.getElementById('performance-message').innerHTML = resultsHtml;
+}
     function saveScore() {
         const gameData = {
             name: playerName,
@@ -1191,27 +1426,63 @@
         document.getElementById('player-name').value = playerName;
     }
 
+    function downloadAnswersPDF() {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        let y = 15;
+        doc.setFontSize(18);
+        doc.text("Siox Logistics Test", 10, y);
+        y += 10;
+        doc.setFontSize(14);
+        doc.text(`Name: ${playerName}`, 10, y); // Add player's name
+        y += 10;
+        doc.setFontSize(16);
+        doc.text("Quiz Results", 10, y);
+        y += 10;
+        filteredCards.forEach((card, idx) => {
+            doc.setFontSize(12);
+            doc.text(`Q${idx+1}: ${card.question}`, 10, y);
+            y += 7;
+            // Wrap long user answer
+            const userAnswerLines = doc.splitTextToSize(`Your answer: ${userAnswers[idx]||''}`, 180);
+            doc.text(userAnswerLines, 10, y);
+            y += userAnswerLines.length * 7;
+            // Wrap long correct answer
+            const correctAnswerLines = doc.splitTextToSize(`Correct: ${card.answer}`, 180);
+            doc.text(correctAnswerLines, 10, y);
+            y += correctAnswerLines.length * 7 + 3;
+            if (y > 270) { doc.addPage(); y = 15; }
+        });
+        doc.save("Siox_Logistics_Test_Results.pdf");
+    }
+
+    function sendAnswersByEmail() {
+        let body = `Siox Logistics Test\nName: ${playerName}\n\nQuiz Results:\n\n`;
+        filteredCards.forEach((card, idx) => {
+            body += `Q${idx+1}: ${card.question}\nYour answer: ${userAnswers[idx]||''}\nCorrect: ${card.answer}\n\n`;
+        });
+        // Single examiner email
+        const email = "kelvins@sioxlogistics.com";
+        window.location.href = `mailto:${email}?subject=Siox Logistics Test Results&body=${encodeURIComponent(body)}`;
+    }
+
     // Allow clicking on card to flip it
-    document.getElementById('flash-card').addEventListener('click', flipCard);
+   // document.getElementById('flash-card').addEventListener('click', flipCard);
 
     // Keyboard navigation
-    document.addEventListener('keydown', function(event) {
-        if (!gameActive) return;
-        
-        switch(event.key) {
-            case ' ':
-            case 'Enter':
-                event.preventDefault();
-                flipCard();
-                break;
-            case '1':
-                if (isFlipped) answerQuestion(true);
-                break;
-            case '2':
-                if (isFlipped) answerQuestion(false);
-                break;
-        }
-    });
+document.addEventListener('keydown', function(event) {
+    if (!gameActive) return;
+    // Remove flipCard() on space/enter
+    // Only allow answer shortcuts if card is flipped
+    switch(event.key) {
+        case '1':
+            if (isFlipped) answerQuestion(true);
+            break;
+        case '2':
+            if (isFlipped) answerQuestion(false);
+            break;
+    }
+});
 
     // Initialize
     updateCard();
@@ -1235,71 +1506,28 @@
     return matrix[a.length][b.length];
 }
 
-function startVoiceAnswer() {
-    if (!('webkitSpeechRecognition' in window)) {
-        alert('Voice recognition not supported in this browser.');
-        return;
-    }
-    const recognition = new webkitSpeechRecognition();
-    recognition.lang = 'en-US';
-    recognition.interimResults = true;
-    recognition.maxAlternatives = 1;
+function submitAnswer() {
+    const answer = document.getElementById('user-answer').value.trim();
+    userAnswers[currentCardIndex] = answer;
+    flipCard(); // Flip card to show answer after submission
 
-    let finalTranscript = '';
-
-    recognition.onresult = function(event) {
-        let interimTranscript = '';
-        for (let i = event.resultIndex; i < event.results.length; ++i) {
-            if (event.results[i].isFinal) {
-                finalTranscript += event.results[i][0].transcript;
-            } else {
-                interimTranscript += event.results[i][0].transcript;
-            }
-        }
-        // Show live transcript (interim if not final yet)
-        document.getElementById('transcript-text').textContent = finalTranscript + interimTranscript;
-
-        // Only check answer when final
-        if (finalTranscript) {
-            const spoken = finalTranscript.trim().toLowerCase();
-            const correctAnswer = filteredCards[currentCardIndex].answer.trim().toLowerCase();
-
-            // Fuzzy match: allow up to 25% difference
-            const distance = levenshtein(spoken, correctAnswer);
-            const threshold = Math.floor(correctAnswer.length * 0.25);
-
-            // Also check for key phrase match
-            let isCorrect = false;
-            if (distance <= threshold) {
-                isCorrect = true;
-            } else if (
-                (correctAnswer.includes(spoken) || spoken.includes(correctAnswer)) &&
-                spoken.length >= correctAnswer.length * 0.5
-            ) {
-                isCorrect = true;
-            }
-
-            answerQuestion(isCorrect);
-            alert(isCorrect ? "Correct!" : "Incorrect. Try again!");
-            recognition.stop();
-        }
-    };
-
-    recognition.onerror = function(event) {
-        alert('Voice recognition error: ' + event.error);
-    };
-
-    recognition.onend = function() {
-        // Optionally clear transcript after a few seconds
+    // Wait for speech synthesis to finish, or fallback to 3 seconds
+    if (voiceReadingEnabled) {
+        const answerText = document.getElementById('answer').textContent;
+        const utterance = new SpeechSynthesisUtterance(answerText);
+        utterance.rate = 0.9;
+        utterance.pitch = 1;
+        utterance.volume = 0.8;
+        utterance.onend = () => {
+            nextCard();
+        };
+        speechSynthesis.speak(utterance);
+    } else {
         setTimeout(() => {
-            document.getElementById('transcript-text').textContent = '';
-        }, 3000);
-    };
-
-    document.getElementById('transcript-text').textContent = '';
-    recognition.start();
+            nextCard();
+        }, 3000); // Fallback: show answer for 3 seconds
+    }
 }
-
 </script>
 
 </html>
