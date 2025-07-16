@@ -196,6 +196,20 @@
         justify-content: center;
         flex-wrap: wrap;
     }
+    .draggable-img {
+       width: 140px;
+       height: auto;
+       margin: 10px;
+       border: 3px solid white;
+       border-radius: 12px;
+       cursor: grab;
+       box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+       transition: transform 0.2s ease;
+ }
+.draggable-img:active {
+  cursor: grabbing;
+  transform: scale(1.05);
+}
 
     .answer-btn {
         padding: 12px 30px;
@@ -515,10 +529,8 @@
     <div class="category-filter">
         <button class="filter-btn active" onclick="filterCards('all')">All Cards</button>
         <button class="filter-btn" onclick="filterCards('logistics')">Logistics & 3PL</button>
-        <button class="filter-btn" onclick="filterCards('terms')">Freight Terms</button>
         <button class="filter-btn" onclick="filterCards('trailers')">Trailers</button>
         <button class="filter-btn" onclick="filterCards('compliance')">Compliance</button>
-        <button class="filter-btn" onclick="filterCards('equipment')">Equipment</button>
         <button class="filter-btn" onclick="filterCards('dispatch')">Dispatch</button>
         <button class="filter-btn" onclick="filterCards('terms')">State Abbreviations</button>
         <button class="filter-btn" onclick="filterCards('phonetic')">Phonetics</button>
@@ -526,7 +538,7 @@
         <button class="filter-btn" onclick="filterCards('equipment')">Truck & Trailer Types</button>
         <button class="filter-btn" onclick="filterCards('payment')">Payment Types</button>
         <button class="filter-btn" onclick="filterCards('accessorial')">Accessorial Charges</button>
-        <button class="filter-btn" onclick="filterCards('insurance')">Insuarance</button>
+        <button class="filter-btn" onclick="filterCards('insurance')">Insurance</button>
         <button class="filter-btn" onclick="filterCards('permits')">OS/OW Permits</button>
         <button class="filter-btn" onclick="filterCards('shipping')">Blind Shipment</button>
         
@@ -561,6 +573,9 @@
     <div class="controls">
         <button class="btn btn-secondary" onclick="nextCard()">Next Question</button>
         <button class="btn btn-secondary" onclick="endGame()">End Game</button>
+        <button class="btn btn-secondary" onclick="openEscapeRoom()">🚪 Launch Compliance Escape Room</button>
+        <button class="btn btn-secondary" onclick="openTrailerMatcher()">🚚 Launch Trailer Matcher</button>
+
     </div>
 </div>
 
@@ -580,109 +595,190 @@
     <button class="btn btn-primary" onclick="hideLeaderboard()" style="margin-top: 20px;">Back to Game</button>
 </div>
 
+<!-- Compliance Escape Room Modal -->
+<div id="escape-room-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:9999; color:white; overflow-y:auto;">
+  <div style="max-width:600px; margin:80px auto; background:#1e3c72; padding:30px; border-radius:20px;">
+    <h2 id="escape-title">🧩 Room 1: Carrier Onboarding</h2>
+    <p id="escape-question">Which of the following are required to onboard a new carrier?</p>
+    <form id="escape-form" style="margin-top:15px;"></form>
+    <div style="margin-top:20px;">
+      <button class="btn btn-secondary" onclick="submitEscapeRoom()">Submit</button>
+      <button class="btn btn-primary" onclick="closeEscapeRoom()" style="float:right;">Exit</button>
+    </div>
+    <div id="escape-feedback" style="margin-top:15px; font-weight:bold;"></div>
+  </div>
+</div>
+
+<!-- Trailer Matcher Modal -->
+<div id="trailer-matcher-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); color:white; z-index:9999;">
+  <div style="max-width:800px; margin:60px auto; padding:30px; background:#1e3c72; border-radius:20px;">
+    <h2 style="text-align:center;">🚛 Match the Trailer to the Commodity</h2>
+    
+    <div style="display:flex; flex-wrap:wrap; justify-content:space-between; margin-top:30px; gap:40px;">
+      <!-- Draggable Trailers -->
+      <div id="trailers" style="flex:1;">
+        <div class="draggable" draggable="true" data-type="Reefer">🧊 Reefer</div>
+        <div class="draggable" draggable="true" data-type="Flatbed">🛠️ Flatbed</div>
+        <div class="draggable" draggable="true" data-type="Lowboy">🏗️ Lowboy</div>
+        <div class="draggable" draggable="true" data-type="Conestoga">⛱️ Conestoga</div>
+      </div>
+
+      <!-- Drop Targets -->
+      <div id="commodities" style="flex:1;">
+        <div class="drop-zone" data-match="Reefer">🥬 Produce</div>
+        <div class="drop-zone" data-match="Flatbed">📦 Steel Pipes</div>
+        <div class="drop-zone" data-match="Lowboy">🚜 Oversized Machines</div>
+        <div class="drop-zone" data-match="Conestoga">🪑 Furniture</div>
+      </div>
+    </div>
+
+    <div id="trailer-feedback" style="margin-top:20px; text-align:center; font-weight:bold;"></div>
+    <div style="text-align:center; margin-top:20px;">
+      <button class="btn btn-secondary" onclick="closeTrailerMatcher()">Exit Game</button>
+    </div>
+  </div>
+</div>
+
+<script>
+let escapeRoomStage = 1;
+
+function openEscapeRoom() {
+  escapeRoomStage = 1;
+  document.getElementById('escape-room-modal').style.display = 'block';
+  renderEscapeRoomStage();
+}
+
+function closeEscapeRoom() {
+  document.getElementById('escape-room-modal').style.display = 'none';
+}
+
+function submitEscapeRoom() {
+  const form = document.querySelectorAll('#escape-form input');
+  const selected = [...form].filter(c => c.checked).map(c => c.value);
+  let correct;
+
+  if (escapeRoomStage === 1) {
+    correct = ['MC', 'COI', 'W9'];
+    if (arraysMatch(selected, correct)) {
+      escapeFeedback("✅ Door unlocked! Moving to Room 2...");
+      escapeRoomStage++;
+      setTimeout(renderEscapeRoomStage, 2000);
+    } else {
+      escapeFeedback("❌ Try again. You need the key documents.");
+    }
+  } else if (escapeRoomStage === 2) {
+    correct = ['BOL', 'RC'];
+    if (arraysMatch(selected, correct)) {
+      escapeFeedback("✅ Door unlocked! Moving to Final Room...");
+      escapeRoomStage++;
+      setTimeout(renderEscapeRoomStage, 2000);
+    } else {
+      escapeFeedback("❌ Incorrect. Only essential pickup docs needed.");
+    }
+  } else if (escapeRoomStage === 3) {
+    correct = ['TONU'];
+    if (arraysMatch(selected, correct)) {
+      escapeFeedback("🎉 You escaped! You know your compliance well.");
+      setTimeout(closeEscapeRoom, 4000);
+    } else {
+      escapeFeedback("❌ Oops! Only one correct form unlocks the door.");
+    }
+  }
+}
+
+function renderEscapeRoomStage() {
+  const title = document.getElementById('escape-title');
+  const question = document.getElementById('escape-question');
+  const form = document.getElementById('escape-form');
+  const feedback = document.getElementById('escape-feedback');
+  form.innerHTML = '';
+  feedback.textContent = '';
+
+  if (escapeRoomStage === 1) {
+    title.textContent = '🧩 Room 1: Carrier Onboarding';
+    question.textContent = 'Which of the following are required to onboard a new carrier?';
+    addEscapeCheckboxes(['MC Authority', 'Certificate of Insurance', 'W-9 Form', 'SCAC Code'], ['MC', 'COI', 'W9', 'SCAC']);
+  } else if (escapeRoomStage === 2) {
+    title.textContent = '🚛 Room 2: At Pickup';
+    question.textContent = 'Driver is at pickup. What documents should they have?';
+    addEscapeCheckboxes(['Bill of Lading (BOL)', 'Rate Confirmation (RC)', 'SCAC Code', 'EDI File'], ['BOL', 'RC', 'SCAC', 'EDI']);
+  } else if (escapeRoomStage === 3) {
+    title.textContent = '🔒 Final Room: Load Canceled';
+    question.textContent = 'What form is sent when a load is canceled after dispatch?';
+    addEscapeCheckboxes(['POD', 'TONU', 'Detention', 'FCFS'], ['POD', 'TONU', 'Detention', 'FCFS']);
+  }
+}
+
+function addEscapeCheckboxes(labels, values) {
+  const form = document.getElementById('escape-form');
+  labels.forEach((label, i) => {
+    const html = `<label><input type="checkbox" value="${values[i]}"> ${label}</label><br>`;
+    form.insertAdjacentHTML('beforeend', html);
+  });
+}
+
+function escapeFeedback(msg) {
+  document.getElementById('escape-feedback').textContent = msg;
+}
+
+function arraysMatch(a, b) {
+  return a.length === b.length && a.every(val => b.includes(val));
+}
+</script>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
     const flashCards = [
 // All US States: Abbreviation <-> Full Name
-  { question: "What is the abbreviation for Alabama?", answer: "AL", category: "terms" },
   { question: "Which state uses the abbreviation AL?", answer: "Alabama", category: "terms" },
-  { question: "What is the abbreviation for Alaska?", answer: "AK", category: "terms" },
   { question: "Which state uses the abbreviation AK?", answer: "Alaska", category: "terms" },
-  { question: "What is the abbreviation for Arizona?", answer: "AZ", category: "terms" },
   { question: "Which state uses the abbreviation AZ?", answer: "Arizona", category: "terms" },
-  { question: "What is the abbreviation for Arkansas?", answer: "AR", category: "terms" },
   { question: "Which state uses the abbreviation AR?", answer: "Arkansas", category: "terms" },
-  { question: "What is the abbreviation for California?", answer: "CA", category: "terms" },
   { question: "Which state uses the abbreviation CA?", answer: "California", category: "terms" },
-  { question: "What is the abbreviation for Colorado?", answer: "CO", category: "terms" },
   { question: "Which state uses the abbreviation CO?", answer: "Colorado", category: "terms" },
-  { question: "What is the abbreviation for Connecticut?", answer: "CT", category: "terms" },
   { question: "Which state uses the abbreviation CT?", answer: "Connecticut", category: "terms" },
-  { question: "What is the abbreviation for Delaware?", answer: "DE", category: "terms" },
   { question: "Which state uses the abbreviation DE?", answer: "Delaware", category: "terms" },
-  { question: "What is the abbreviation for Florida?", answer: "FL", category: "terms" },
   { question: "Which state uses the abbreviation FL?", answer: "Florida", category: "terms" },
-  { question: "What is the abbreviation for Georgia?", answer: "GA", category: "terms" },
   { question: "Which state uses the abbreviation GA?", answer: "Georgia", category: "terms" },
-  { question: "What is the abbreviation for Hawaii?", answer: "HI", category: "terms" },
   { question: "Which state uses the abbreviation HI?", answer: "Hawaii", category: "terms" },
-  { question: "What is the abbreviation for Idaho?", answer: "ID", category: "terms" },
   { question: "Which state uses the abbreviation ID?", answer: "Idaho", category: "terms" },
-  { question: "What is the abbreviation for Illinois?", answer: "IL", category: "terms" },
   { question: "Which state uses the abbreviation IL?", answer: "Illinois", category: "terms" },
-  { question: "What is the abbreviation for Indiana?", answer: "IN", category: "terms" },
   { question: "Which state uses the abbreviation IN?", answer: "Indiana", category: "terms" },
-  { question: "What is the abbreviation for Iowa?", answer: "IA", category: "terms" },
   { question: "Which state uses the abbreviation IA?", answer: "Iowa", category: "terms" },
-  { question: "What is the abbreviation for Kansas?", answer: "KS", category: "terms" },
   { question: "Which state uses the abbreviation KS?", answer: "Kansas", category: "terms" },
-  { question: "What is the abbreviation for Kentucky?", answer: "KY", category: "terms" },
   { question: "Which state uses the abbreviation KY?", answer: "Kentucky", category: "terms" },
-  { question: "What is the abbreviation for Louisiana?", answer: "LA", category: "terms" },
   { question: "Which state uses the abbreviation LA?", answer: "Louisiana", category: "terms" },
-  { question: "What is the abbreviation for Maine?", answer: "ME", category: "terms" },
   { question: "Which state uses the abbreviation ME?", answer: "Maine", category: "terms" },
-  { question: "What is the abbreviation for Maryland?", answer: "MD", category: "terms" },
   { question: "Which state uses the abbreviation MD?", answer: "Maryland", category: "terms" },
-  { question: "What is the abbreviation for Massachusetts?", answer: "MA", category: "terms" },
   { question: "Which state uses the abbreviation MA?", answer: "Massachusetts", category: "terms" },
-  { question: "What is the abbreviation for Michigan?", answer: "MI", category: "terms" },
   { question: "Which state uses the abbreviation MI?", answer: "Michigan", category: "terms" },
-  { question: "What is the abbreviation for Minnesota?", answer: "MN", category: "terms" },
   { question: "Which state uses the abbreviation MN?", answer: "Minnesota", category: "terms" },
-  { question: "What is the abbreviation for Mississippi?", answer: "MS", category: "terms" },
   { question: "Which state uses the abbreviation MS?", answer: "Mississippi", category: "terms" },
-  { question: "What is the abbreviation for Missouri?", answer: "MO", category: "terms" },
   { question: "Which state uses the abbreviation MO?", answer: "Missouri", category: "terms" },
-  { question: "What is the abbreviation for Montana?", answer: "MT", category: "terms" },
   { question: "Which state uses the abbreviation MT?", answer: "Montana", category: "terms" },
-  { question: "What is the abbreviation for Nebraska?", answer: "NE", category: "terms" },
   { question: "Which state uses the abbreviation NE?", answer: "Nebraska", category: "terms" },
-  { question: "What is the abbreviation for Nevada?", answer: "NV", category: "terms" },
   { question: "Which state uses the abbreviation NV?", answer: "Nevada", category: "terms" },
-  { question: "What is the abbreviation for New Hampshire?", answer: "NH", category: "terms" },
   { question: "Which state uses the abbreviation NH?", answer: "New Hampshire", category: "terms" },
-  { question: "What is the abbreviation for New Jersey?", answer: "NJ", category: "terms" },
   { question: "Which state uses the abbreviation NJ?", answer: "New Jersey", category: "terms" },
-  { question: "What is the abbreviation for New Mexico?", answer: "NM", category: "terms" },
   { question: "Which state uses the abbreviation NM?", answer: "New Mexico", category: "terms" },
-  { question: "What is the abbreviation for New York?", answer: "NY", category: "terms" },
   { question: "Which state uses the abbreviation NY?", answer: "New York", category: "terms" },
-  { question: "What is the abbreviation for North Carolina?", answer: "NC", category: "terms" },
   { question: "Which state uses the abbreviation NC?", answer: "North Carolina", category: "terms" },
-  { question: "What is the abbreviation for North Dakota?", answer: "ND", category: "terms" },
   { question: "Which state uses the abbreviation ND?", answer: "North Dakota", category: "terms" },
-  { question: "What is the abbreviation for Ohio?", answer: "OH", category: "terms" },
   { question: "Which state uses the abbreviation OH?", answer: "Ohio", category: "terms" },
-  { question: "What is the abbreviation for Oklahoma?", answer: "OK", category: "terms" },
   { question: "Which state uses the abbreviation OK?", answer: "Oklahoma", category: "terms" },
-  { question: "What is the abbreviation for Oregon?", answer: "OR", category: "terms" },
   { question: "Which state uses the abbreviation OR?", answer: "Oregon", category: "terms" },
-  { question: "What is the abbreviation for Pennsylvania?", answer: "PA", category: "terms" },
   { question: "Which state uses the abbreviation PA?", answer: "Pennsylvania", category: "terms" },
-  { question: "What is the abbreviation for Rhode Island?", answer: "RI", category: "terms" },
   { question: "Which state uses the abbreviation RI?", answer: "Rhode Island", category: "terms" },
-  { question: "What is the abbreviation for South Carolina?", answer: "SC", category: "terms" },
   { question: "Which state uses the abbreviation SC?", answer: "South Carolina", category: "terms" },
-  { question: "What is the abbreviation for South Dakota?", answer: "SD", category: "terms" },
   { question: "Which state uses the abbreviation SD?", answer: "South Dakota", category: "terms" },
-  { question: "What is the abbreviation for Tennessee?", answer: "TN", category: "terms" },
   { question: "Which state uses the abbreviation TN?", answer: "Tennessee", category: "terms" },
-  { question: "What is the abbreviation for Texas?", answer: "TX", category: "terms" },
   { question: "Which state uses the abbreviation TX?", answer: "Texas", category: "terms" },
-  { question: "What is the abbreviation for Utah?", answer: "UT", category: "terms" },
   { question: "Which state uses the abbreviation UT?", answer: "Utah", category: "terms" },
-  { question: "What is the abbreviation for Vermont?", answer: "VT", category: "terms" },
   { question: "Which state uses the abbreviation VT?", answer: "Vermont", category: "terms" },
-  { question: "What is the abbreviation for Virginia?", answer: "VA", category: "terms" },
   { question: "Which state uses the abbreviation VA?", answer: "Virginia", category: "terms" },
-  { question: "What is the abbreviation for Washington?", answer: "WA", category: "terms" },
   { question: "Which state uses the abbreviation WA?", answer: "Washington", category: "terms" },
-  { question: "What is the abbreviation for West Virginia?", answer: "WV", category: "terms" },
   { question: "Which state uses the abbreviation WV?", answer: "West Virginia", category: "terms" },
-  { question: "What is the abbreviation for Wisconsin?", answer: "WI", category: "terms" },
   { question: "Which state uses the abbreviation WI?", answer: "Wisconsin", category: "terms" },
-  { question: "What is the abbreviation for Wyoming?", answer: "WY", category: "terms" },
   { question: "Which state uses the abbreviation WY?", answer: "Wyoming", category: "terms" },
     
   // Industry Abreviations
@@ -1528,6 +1624,88 @@ function submitAnswer() {
         }, 3000); // Fallback: show answer for 3 seconds
     }
 }
+function openTrailerMatcher() {
+  document.getElementById('trailer-matcher-modal').style.display = 'block';
+  document.getElementById('trailer-feedback').textContent = '';
+  resetDropZones();
+}
+
+function closeTrailerMatcher() {
+  document.getElementById('trailer-matcher-modal').style.display = 'none';
+}
+
+function resetDropZones() {
+  document.querySelectorAll('.drop-zone').forEach(zone => {
+    zone.classList.remove('correct', 'incorrect');
+    zone.textContent = zone.getAttribute('data-match') === 'Reefer' ? '🥬 Produce'
+                    : zone.getAttribute('data-match') === 'Flatbed' ? '📦 Steel Pipes'
+                    : zone.getAttribute('data-match') === 'Lowboy' ? '🚜 Oversized Machines'
+                    : '🪑 Furniture';
+  });
+
+  // Reset trailer elements (put them back)
+  const trailerArea = document.getElementById('trailers');
+  const trailerNames = ['Reefer', 'Flatbed', 'Lowboy', 'Conestoga'];
+  trailerArea.innerHTML = trailerNames.map(type => 
+    `<div class="draggable" draggable="true" data-type="${type}">` +
+    (type === 'Reefer' ? '🧊 Reefer' :
+     type === 'Flatbed' ? '🛠️ Flatbed' :
+     type === 'Lowboy' ? '🏗️ Lowboy' :
+     '⛱️ Conestoga') +
+    `</div>`).join('');
+  addDragEvents();
+}
+
+function addDragEvents() {
+  document.querySelectorAll('.draggable').forEach(item => {
+    item.addEventListener('dragstart', dragStart);
+  });
+  document.querySelectorAll('.drop-zone').forEach(zone => {
+    zone.addEventListener('dragover', dragOver);
+    zone.addEventListener('drop', dropItem);
+  });
+}
+
+function dragStart(e) {
+  e.dataTransfer.setData("text/plain", e.target.getAttribute('data-type'));
+}
+
+function dragOver(e) {
+  e.preventDefault();
+}
+
+function dropItem(e) {
+  e.preventDefault();
+  const draggedType = e.dataTransfer.getData("text/plain");
+  const match = e.currentTarget.getAttribute('data-match');
+
+  if (draggedType === match) {
+    e.currentTarget.classList.add('correct');
+    e.currentTarget.classList.remove('incorrect');
+    e.currentTarget.textContent += ` ✅ ${draggedType}`;
+  } else {
+    e.currentTarget.classList.add('incorrect');
+    e.currentTarget.classList.remove('correct');
+    e.currentTarget.textContent += ` ❌ ${draggedType}`;
+  }
+
+  // Remove the dragged item from UI
+  const draggedEl = document.querySelector(`.draggable[data-type="${draggedType}"]`);
+  if (draggedEl) draggedEl.remove();
+
+  // Check if game is completed
+  setTimeout(() => {
+    const allDone = [...document.querySelectorAll('.drop-zone')].every(z => z.classList.contains('correct'));
+    if (allDone) {
+      document.getElementById('trailer-feedback').textContent = "🎉 You matched all trailers correctly!";
+    }
+  }, 300);
+}
+
+// Initialize drag events on load
+document.addEventListener('DOMContentLoaded', addDragEvents);
+
+
 </script>
 
 </html>
