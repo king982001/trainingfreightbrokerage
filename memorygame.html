@@ -1,0 +1,1299 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <style>
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        min-height: 100vh;
+        color: #333;
+        padding: 20px;
+    }
+
+    .header {
+        text-align: center;
+        margin-bottom: 30px;
+        color: white;
+    }
+
+    .header h1 {
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .header p {
+        font-size: 1.2rem;
+        opacity: 0.9;
+    }
+
+    .game-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+    }
+
+    .game-controls {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .category-selector {
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+
+    .category-btn {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        padding: 12px 20px;
+        border-radius: 25px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .category-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(102,126,234,0.4);
+    }
+
+    .category-btn.active {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    }
+
+    .game-stats {
+        display: flex;
+        gap: 20px;
+        align-items: center;
+    }
+
+    .stat-item {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 10px 20px;
+        border-radius: 15px;
+        text-align: center;
+        min-width: 80px;
+    }
+
+    .stat-number {
+        font-size: 1.5rem;
+        font-weight: bold;
+        display: block;
+    }
+
+    .stat-label {
+        font-size: 0.8rem;
+        opacity: 0.9;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .difficulty-selector {
+        margin-bottom: 20px;
+    }
+
+    .difficulty-btn {
+        background: #f8f9fa;
+        border: 2px solid #dee2e6;
+        padding: 10px 20px;
+        margin: 0 5px;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-weight: 600;
+    }
+
+    .difficulty-btn.active {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        color: white;
+        border-color: #28a745;
+    }
+
+    .memory-grid {
+        display: grid;
+        gap: 15px;
+        margin: 30px 0;
+        justify-content: center;
+    }
+
+    .grid-4x4 { grid-template-columns: repeat(4, 1fr); max-width: 600px; margin: 0 auto; }
+    .grid-6x6 { grid-template-columns: repeat(6, 1fr); max-width: 800px; margin: 0 auto; }
+    .grid-8x4 { grid-template-columns: repeat(8, 1fr); max-width: 1000px; margin: 0 auto; }
+
+    .memory-card {
+        aspect-ratio: 1;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 15px;
+        cursor: pointer;
+        position: relative;
+        transform-style: preserve-3d;
+        transition: transform 0.6s ease;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        min-height: 100px;
+    }
+
+    .memory-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .memory-card.flipped {
+        transform: rotateY(180deg);
+    }
+
+    .memory-card.matched {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        transform: scale(0.95);
+        opacity: 0.8;
+    }
+
+    .card-face {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        backface-visibility: hidden;
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 10px;
+    }
+
+    .card-back {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        font-size: 2rem;
+    }
+
+    .card-front {
+        background: white;
+        color: #333;
+        transform: rotateY(180deg);
+        border: 3px solid #e9ecef;
+        font-weight: bold;
+        font-size: 0.9rem;
+        line-height: 1.2;
+    }
+
+    .card-front.equipment { background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%); }
+    .card-front.regulation { background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); }
+    .card-front.state { background: linear-gradient(135deg, #d299c2 0%, #fef9d7 100%); }
+    .card-front.terminology { background: linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%); }
+
+    .game-complete {
+        text-align: center;
+        padding: 40px;
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        color: white;
+        border-radius: 20px;
+        margin: 30px 0;
+        display: none;
+    }
+
+    .game-complete h2 {
+        font-size: 2.5rem;
+        margin-bottom: 15px;
+    }
+
+    .game-complete p {
+        font-size: 1.2rem;
+        margin-bottom: 20px;
+    }
+
+    .btn {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        padding: 15px 30px;
+        border-radius: 25px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(102,126,234,0.4);
+    }
+
+    .btn-success {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    }
+
+    .learning-panel {
+        background: #f8f9fa;
+        border-radius: 15px;
+        padding: 25px;
+        margin: 30px 0;
+        border-left: 5px solid #667eea;
+    }
+
+    .learning-panel h3 {
+        color: #667eea;
+        margin-bottom: 15px;
+        font-size: 1.3rem;
+    }
+
+    .tip-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 15px;
+        margin-top: 15px;
+    }
+
+    .tip-item {
+        background: white;
+        padding: 15px;
+        border-radius: 10px;
+        border-left: 3px solid #28a745;
+    }
+
+    .progress-bar {
+        width: 100%;
+        height: 8px;
+        background: #e9ecef;
+        border-radius: 4px;
+        margin: 20px 0;
+        overflow: hidden;
+    }
+
+    .progress-fill {
+        height: 100%;
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        width: 0%;
+        transition: width 0.3s ease;
+    }
+
+    .audio-controls {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 1000;
+        display: flex;
+        gap: 10px;
+    }
+
+    .audio-btn {
+        background: rgba(255,255,255,0.9);
+        border: none;
+        padding: 10px;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 1.2rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+
+    .audio-btn:hover {
+        transform: scale(1.1);
+        background: white;
+    }
+
+    .level-indicator {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        color: white;
+        padding: 15px 25px;
+        border-radius: 25px;
+        text-align: center;
+        margin-bottom: 20px;
+        font-weight: bold;
+        font-size: 1.2rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        box-shadow: 0 8px 25px rgba(240,147,251,0.4);
+    }
+
+    .level-progress {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin: 15px 0;
+    }
+
+    .level-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: #dee2e6;
+        transition: all 0.3s ease;
+    }
+
+    .level-dot.completed {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        transform: scale(1.2);
+    }
+
+    .level-dot.current {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        transform: scale(1.4);
+        box-shadow: 0 0 15px rgba(240,147,251,0.6);
+    }
+
+    .combo-indicator {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: linear-gradient(135deg, #ff6b6b 0%, #feca57 100%);
+        color: white;
+        padding: 20px 40px;
+        border-radius: 25px;
+        font-size: 2rem;
+        font-weight: bold;
+        text-align: center;
+        z-index: 1000;
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.5);
+        transition: all 0.5s ease;
+        pointer-events: none;
+    }
+
+    .combo-indicator.show {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+
+    .particle-effect {
+        position: absolute;
+        pointer-events: none;
+        z-index: 999;
+    }
+
+    .particle {
+        position: absolute;
+        width: 8px;
+        height: 8px;
+        background: #ffc107;
+        border-radius: 50%;
+        animation: particle-burst 1s ease-out forwards;
+    }
+
+    @keyframes particle-burst {
+        0% {
+            opacity: 1;
+            transform: scale(1);
+        }
+        100% {
+            opacity: 0;
+            transform: scale(0) translate(var(--dx), var(--dy));
+        }
+    }
+
+    .card-glow {
+        box-shadow: 0 0 30px #28a745 !important;
+        animation: glow-pulse 0.5s ease-in-out;
+    }
+
+    @keyframes glow-pulse {
+        0%, 100% { box-shadow: 0 0 30px #28a745; }
+        50% { box-shadow: 0 0 50px #28a745; }
+    }
+
+    .shake-animation {
+        animation: shake 0.5s ease-in-out;
+    }
+
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-5px); }
+        75% { transform: translateX(5px); }
+    }
+
+    .achievement-popup {
+        position: fixed;
+        top: 100px;
+        right: 20px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 20px;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        z-index: 1000;
+        transform: translateX(400px);
+        transition: transform 0.5s ease;
+        max-width: 300px;
+    }
+
+    .achievement-popup.show {
+        transform: translateX(0);
+    }
+
+    .streak-counter {
+        position: fixed;
+        top: 120px;
+        left: 20px;
+        background: linear-gradient(135deg, #ff6b6b 0%, #feca57 100%);
+        color: white;
+        padding: 15px 20px;
+        border-radius: 20px;
+        font-weight: bold;
+        font-size: 1.1rem;
+        box-shadow: 0 8px 25px rgba(255,107,107,0.4);
+        z-index: 1000;
+        transform: scale(0);
+        transition: all 0.3s ease;
+    }
+
+    .streak-counter.show {
+        transform: scale(1);
+    }
+
+    @media (max-width: 768px) {
+        .game-controls {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .category-selector {
+            justify-content: center;
+        }
+
+        .game-stats {
+            justify-content: center;
+        }
+
+        .grid-6x6 { grid-template-columns: repeat(4, 1fr); }
+        .grid-8x4 { grid-template-columns: repeat(4, 1fr); }
+
+        .memory-card {
+            min-height: 80px;
+        }
+
+        .card-front {
+            font-size: 0.8rem;
+        }
+
+        .fixed-controls {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            display: flex;
+            gap: 10px;
+            z-index: 9999;
+        }
+    }
+</style>
+    </head>
+    <body>
+        <!-- 🔊 Background Music -->
+    <audio id="background-music" autoplay loop>
+        <source src="audio/background1.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+<div class="streak-counter" id="streakCounter">
+    🔥 Streak: <span id="streakNumber">0</span>
+</div>
+
+<div class="combo-indicator" id="comboIndicator">
+    PERFECT MATCH!
+</div>
+
+<div class="achievement-popup" id="achievementPopup">
+    <h3>🏆 Achievement Unlocked!</h3>
+    <p id="achievementText">Great job!</p>
+</div>
+
+<div class="header">
+    <h1>🚛 Siox Logistics Memory Master</h1>
+    <p>Master Trucking Logistics Through Interactive Learning</p>
+</div>
+<div class="audio-controls">
+  <button id="musicToggle" class="audio-btn" onclick="toggleMusic()">🎵</button>
+  <button id="soundToggle" class="audio-btn" onclick="toggleSounds()">🔊</button>
+  <button onclick="goBackToMain()" class="btn btn-secondary">Main Page</button>
+</div>
+
+<div class="game-container">
+    <div class="game-controls">
+        <div class="category-selector">
+            <button class="category-btn active" onclick="selectCategory('equipment')">Equipment Types</button>
+            <button class="category-btn" onclick="selectCategory('regulations')">DOT Regulations</button>
+            <button class="category-btn" onclick="selectCategory('states')">State Codes</button>
+            <button class="category-btn" onclick="selectCategory('terminology')">Industry Terms</button>
+        </div>
+        
+        <div class="game-stats">
+            <div class="stat-item">
+                <span class="stat-number" id="moves">0</span>
+                <span class="stat-label">Moves</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number" id="matches">0</span>
+                <span class="stat-label">Matches</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number" id="timer">00:00</span>
+                <span class="stat-label">Time</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="level-indicator" id="levelIndicator">
+        Level 1 - Beginner Broker
+    </div>
+
+    <div class="level-progress" id="levelProgress">
+        <div class="level-dot current"></div>
+        <div class="level-dot"></div>
+        <div class="level-dot"></div>
+        <div class="level-dot"></div>
+        <div class="level-dot"></div>
+    </div>
+
+    <div class="difficulty-selector">
+        <button class="difficulty-btn active" onclick="setDifficulty('easy')">Easy (4x4)</button>
+        <button class="difficulty-btn" onclick="setDifficulty('medium')">Medium (6x6)</button>
+        <button class="difficulty-btn" onclick="setDifficulty('hard')">Hard (8x4)</button>
+    </div>
+
+    <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+    </div>
+
+    <div class="memory-grid grid-4x4" id="memoryGrid"></div>
+
+    <div class="game-complete" id="gameComplete">
+        <h2>🎉 Congratulations!</h2>
+        <p>You've mastered this category!</p>
+        <p>Your expertise in trucking logistics is growing stronger.</p>
+        <button class="btn btn-success" onclick="nextCategory()">Next Category</button>
+        <button class="btn" onclick="restartGame()">Play Again</button>
+    </div>
+
+    <div class="learning-panel">
+        <h3>📚 Learning Focus: <span id="currentCategory">Equipment Types</span></h3>
+        <p id="categoryDescription">Learn to identify different trailer types and their specific uses in freight transportation.</p>
+        
+        <div class="tip-grid" id="learningTips">
+            <div class="tip-item">
+                <strong>💡 Pro Tip:</strong> Dry vans are the most common trailer type, used for general freight that doesn't require temperature control.
+            </div>
+            <div class="tip-item">
+                <strong>🎯 Remember:</strong> Reefer trailers maintain specific temperatures for perishable goods like food and pharmaceuticals.
+            </div>
+            <div class="tip-item">
+                <strong>📏 Key Fact:</strong> Standard dry van and reefer trailers are typically 53 feet long with 102" width.
+            </div>
+        </div>
+    </div>
+
+    <div style="text-align: center; margin-top: 30px;">
+        <button class="btn" onclick="restartGame()">🔄 New Game</button>
+        <button class="btn btn-success" onclick="showHint()">💡 Hint</button>
+    </div>
+</div>
+   </body>
+<script>
+    // Game data for different categories
+    const gameData = {
+        equipment: {
+            name: "Equipment Types",
+            description: "Learn to identify different trailer types and their specific uses in freight transportation.",
+            pairs: [
+                { term: "Dry Van", definition: "53' enclosed trailer for general freight" },
+                { term: "Reefer", definition: "Temperature-controlled trailer for perishables" },
+                { term: "Flatbed", definition: "Open trailer for oversized/heavy cargo" },
+                { term: "Step Deck", definition: "Lower deck trailer for tall freight" },
+                { term: "Lowboy", definition: "Ultra-low trailer for heavy equipment" },
+                { term: "Tanker", definition: "Liquid cargo transportation trailer" },
+                { term: "Car Hauler", definition: "Multi-level trailer for vehicles" },
+                { term: "Conestoga", definition: "Flatbed with retractable tarp system" },
+                { term: "Double Drop", definition: "Extra-low center section trailer" },
+                { term: "Dump Trailer", definition: "Hydraulic tipping trailer for bulk materials" },
+                { term: "Livestock", definition: "Ventilated trailer for animal transport" },
+                { term: "Curtain Side", definition: "Flatbed with removable side curtains" },
+                { term: "Box Truck", definition: "Straight truck with cargo box" },
+                { term: "Power Only", definition: "Tractor without trailer provided" },
+                { term: "Intermodal", definition: "Container chassis for shipping containers" },
+                { term: "Pneumatic", definition: "Bulk powder/grain transport trailer" },
+                { term: "Hopper", definition: "Bottom-discharge trailer for bulk goods" },
+                { term: "Removable Gooseneck", definition: "Detachable front section lowboy" }
+            ],
+            tips: [
+                { title: "💡 Pro Tip", content: "Dry vans are the most common trailer type, used for general freight that doesn't require temperature control." },
+                { title: "🎯 Remember", content: "Reefer trailers maintain specific temperatures for perishable goods like food and pharmaceuticals." },
+                { title: "📏 Key Fact", content: "Standard dry van and reefer trailers are typically 53 feet long with 102\" width." }
+            ]
+        },
+        regulations: {
+            name: "DOT Regulations",
+            description: "Master essential Department of Transportation rules and compliance requirements.",
+            pairs: [
+                { term: "HOS", definition: "Hours of Service - Driver duty time limits" },
+                { term: "ELD", definition: "Electronic Logging Device - Required for tracking HOS" },
+                { term: "DOT Physical", definition: "Medical exam required every 2 years" },
+                { term: "CDL", definition: "Commercial Driver's License - Required for trucks >26,001 lbs" },
+                { term: "FMCSA", definition: "Federal Motor Carrier Safety Administration" },
+                { term: "MC Authority", definition: "Motor Carrier operating authority number" },
+                { term: "DOT Number", definition: "Department of Transportation identification number" },
+                { term: "CSA Score", definition: "Compliance Safety Accountability rating" },
+                { term: "IFTA", definition: "International Fuel Tax Agreement" },
+                { term: "IRP", definition: "International Registration Plan" },
+                { term: "HAZMAT", definition: "Hazardous Materials transportation certification" },
+                { term: "TWIC Card", definition: "Transportation Worker ID for port access" },
+                { term: "Drug Testing", definition: "Required pre-employment and random testing" },
+                { term: "Weight Limits", definition: "80,000 lbs gross vehicle weight maximum" },
+                { term: "Logbook", definition: "Driver duty status record (paper or electronic)" },
+                { term: "Pre-Trip", definition: "Required vehicle inspection before driving" },
+                { term: "34-Hour Reset", definition: "Rest period to reset 70-hour duty cycle" },
+                { term: "Split Sleeper", definition: "Dividing required rest into two periods" }
+            ],
+            tips: [
+                { title: "⚖️ Legal Requirement", content: "All commercial vehicles over 10,001 lbs must have DOT numbers displayed." },
+                { title: "⏰ Time Management", content: "Drivers can drive maximum 11 hours after 10 consecutive hours off duty." },
+                { title: "📋 Compliance", content: "ELD mandate requires electronic logging for most commercial drivers since 2017." }
+            ]
+        },
+        states: {
+            name: "State Codes & Regulations",
+            description: "Learn state abbreviations and key transportation regulations by state.",
+            pairs: [
+                { term: "CA", definition: "California - Strict emissions, CARB compliance" },
+                { term: "TX", definition: "Texas - Largest freight state, oil transport hub" },
+                { term: "FL", definition: "Florida - Major import/export gateway" },
+                { term: "NY", definition: "New York - Heavy traffic, strict regulations" },
+                { term: "IL", definition: "Illinois - Chicago transportation hub" },
+                { term: "OH", definition: "Ohio - Manufacturing and distribution center" },
+                { term: "PA", definition: "Pennsylvania - Northeast corridor, tolls" },
+                { term: "MI", definition: "Michigan - Auto industry, higher weight limits" },
+                { term: "GA", definition: "Georgia - Atlanta distribution hub" },
+                { term: "NC", definition: "North Carolina - Furniture and textiles" },
+                { term: "TN", definition: "Tennessee - No state income tax, logistics friendly" },
+                { term: "IN", definition: "Indiana - Crossroads of America" },
+                { term: "WI", definition: "Wisconsin - Dairy and agriculture transport" },
+                { term: "MN", definition: "Minnesota - Cold weather considerations" },
+                { term: "MO", definition: "Missouri - Central location, distribution hub" },
+                { term: "AL", definition: "Alabama - Port of Mobile, steel industry" },
+                { term: "AZ", definition: "Arizona - Mexico border, produce transport" },
+                { term: "NV", definition: "Nevada - Las Vegas distribution, mining" }
+            ],
+            tips: [
+                { title: "🗺️ Geography", content: "Learn major freight corridors: I-95 (East Coast), I-10 (South), I-80 (North)" },
+                { title: "💰 Economics", content: "Texas, California, and Illinois handle the most freight tonnage annually." },
+                { title: "🚧 Regulations", content: "Each state has unique permit requirements for oversized loads." }
+            ]
+        },
+        terminology: {
+            name: "Industry Terminology",
+            description: "Master essential freight brokerage and logistics terminology.",
+            pairs: [
+                { term: "Deadhead", definition: "Driving empty without cargo" },
+                { term: "Backhaul", definition: "Return trip cargo to avoid deadhead" },
+                { term: "LTL", definition: "Less Than Truckload - Partial shipments" },
+                { term: "FTL", definition: "Full Truckload - Complete trailer load" },
+                { term: "Spot Rate", definition: "Current market price for immediate shipment" },
+                { term: "Contract Rate", definition: "Pre-negotiated pricing agreement" },
+                { term: "Detention", definition: "Delay compensation for extended loading/unloading" },
+                { term: "Layover", definition: "Overnight stay compensation" },
+                { term: "TONU", definition: "Truck Ordered Not Used - Cancellation fee" },
+                { term: "BOL", definition: "Bill of Lading - Shipping document" },
+                { term: "POD", definition: "Proof of Delivery - Delivery confirmation" },
+                { term: "Rate Con", definition: "Rate Confirmation - Load agreement" },
+                { term: "Lumper", definition: "Third-party loading/unloading service" },
+                { term: "Drop & Hook", definition: "Leave trailer, pick up pre-loaded one" },
+                { term: "Live Load", definition: "Wait while cargo is loaded/unloaded" },
+                { term: "Fuel Surcharge", definition: "Additional fee for fuel price fluctuations" },
+                { term: "Accessorials", definition: "Additional services and fees" },
+                { term: "Freight Class", definition: "NMFC classification for LTL pricing" }
+            ],
+            tips: [
+                { title: "💼 Business", content: "Understanding detention and layover helps negotiate fair compensation." },
+                { title: "📄 Documentation", content: "BOL and POD are critical for payment and legal protection." },
+                { title: "💰 Pricing", content: "Spot rates fluctuate daily based on supply and demand." }
+            ]
+        }
+    };
+
+    // Game state
+    let currentCategory = 'equipment';
+    let currentDifficulty = 'easy';
+    let gameCards = [];
+    let flippedCards = [];
+    let matchedPairs = 0;
+    let moves = 0;
+    let gameTimer = 0;
+    let timerInterval;
+    let gameStarted = false;
+    let currentLevel = 1;
+    let streak = 0;
+    let perfectMatches = 0;
+    let soundEnabled = true;
+    let musicEnabled = true;
+    let backgroundMusic;
+    let achievements = [];
+
+    // Audio system
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    
+    // Create audio buffers for different sounds
+    function createBeep(frequency, duration, type = 'sine') {
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        
+        oscillator.frequency.value = frequency;
+        oscillator.type = type;
+        
+        gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration);
+        
+        oscillator.start(audioContext.currentTime);
+        oscillator.stop(audioContext.currentTime + duration);
+    }
+
+    function playSuccessSound() {
+        if (!soundEnabled) return;
+        // Happy success chord
+        createBeep(523.25, 0.2); // C5
+        setTimeout(() => createBeep(659.25, 0.2), 100); // E5
+        setTimeout(() => createBeep(783.99, 0.3), 200); // G5
+    }
+
+    function playFailSound() {
+        if (!soundEnabled) return;
+        // Descending failure sound
+        createBeep(400, 0.15);
+        setTimeout(() => createBeep(350, 0.15), 150);
+        setTimeout(() => createBeep(300, 0.2), 300);
+    }
+
+    function playFlipSound() {
+        if (!soundEnabled) return;
+        createBeep(800, 0.1, 'square');
+    }
+
+    function playLevelUpSound() {
+        if (!soundEnabled) return;
+        // Triumphant level up melody
+        const notes = [523.25, 587.33, 659.25, 698.46, 783.99];
+        notes.forEach((note, index) => {
+            setTimeout(() => createBeep(note, 0.2), index * 100);
+        });
+    }
+
+    function playComboSound() {
+        if (!soundEnabled) return;
+        // Exciting combo sound
+        createBeep(1000, 0.1);
+        setTimeout(() => createBeep(1200, 0.1), 50);
+        setTimeout(() => createBeep(1400, 0.15), 100);
+    }
+
+   //Background Music 
+    // Level system
+    const levelTitles = [
+        "Beginner Broker",
+        "Junior Dispatcher", 
+        "Load Coordinator",
+        "Senior Broker",
+        "Logistics Expert",
+        "Master Dispatcher",
+        "Freight Guru",
+        "Transportation Wizard",
+        "Logistics Legend",
+        "Trucking Titan"
+    ];
+
+    const levelRequirements = [
+        { matches: 8, time: 180 },   // Level 1
+        { matches: 12, time: 150 },  // Level 2
+        { matches: 16, time: 120 },  // Level 3
+        { matches: 20, time: 100 },  // Level 4
+        { matches: 24, time: 90 },   // Level 5
+        { matches: 28, time: 80 },   // Level 6
+        { matches: 32, time: 70 },   // Level 7
+        { matches: 36, time: 60 },   // Level 8
+        { matches: 40, time: 50 },   // Level 9
+        { matches: 50, time: 45 }    // Level 10
+    ];
+
+    // Difficulty settings
+    const difficulties = {
+        easy: { pairs: 8, gridClass: 'grid-4x4' },
+        medium: { pairs: 18, gridClass: 'grid-6x6' },
+        hard: { pairs: 16, gridClass: 'grid-8x4' }
+    };
+
+    function selectCategory(category) {
+        currentCategory = category;
+        
+        // Update active button
+        document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
+        event.target.classList.add('active');
+        
+        // Update learning panel
+        updateLearningPanel();
+        
+        // Restart game with new category
+        restartGame();
+    }
+
+    function setDifficulty(difficulty) {
+        currentDifficulty = difficulty;
+        
+        // Update active button
+        document.querySelectorAll('.difficulty-btn').forEach(btn => btn.classList.remove('active'));
+        event.target.classList.add('active');
+        
+        // Update grid class
+        const grid = document.getElementById('memoryGrid');
+        grid.className = `memory-grid ${difficulties[difficulty].gridClass}`;
+        
+        // Restart game with new difficulty
+        restartGame();
+    }
+
+    function updateLearningPanel() {
+        const data = gameData[currentCategory];
+        document.getElementById('currentCategory').textContent = data.name;
+        document.getElementById('categoryDescription').textContent = data.description;
+        
+        const tipsContainer = document.getElementById('learningTips');
+        tipsContainer.innerHTML = '';
+        
+        data.tips.forEach(tip => {
+            const tipDiv = document.createElement('div');
+            tipDiv.className = 'tip-item';
+            tipDiv.innerHTML = `<strong>${tip.title}:</strong> ${tip.content}`;
+            tipsContainer.appendChild(tipDiv);
+        });
+    }
+
+    function createGameCards() {
+        const data = gameData[currentCategory];
+        const numPairs = difficulties[currentDifficulty].pairs;
+        const selectedPairs = data.pairs.slice(0, numPairs);
+        
+        gameCards = [];
+        
+        // Create pairs of cards
+        selectedPairs.forEach((pair, index) => {
+            gameCards.push({
+                id: index * 2,
+                content: pair.term,
+                type: 'term',
+                pairId: index,
+                matched: false
+            });
+            
+            gameCards.push({
+                id: index * 2 + 1,
+                content: pair.definition,
+                type: 'definition',
+                pairId: index,
+                matched: false
+            });
+        });
+        
+        // Shuffle cards
+        gameCards = shuffleArray(gameCards);
+    }
+
+    function shuffleArray(array) {
+        const shuffled = [...array];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        return shuffled;
+    }
+
+    function renderGame() {
+        const grid = document.getElementById('memoryGrid');
+        grid.innerHTML = '';
+        
+        gameCards.forEach(card => {
+            const cardElement = document.createElement('div');
+            cardElement.className = 'memory-card';
+            cardElement.dataset.cardId = card.id;
+            
+            if (card.matched) {
+                cardElement.classList.add('matched');
+            }
+            
+            cardElement.innerHTML = `
+                <div class="card-face card-back">🚛</div>
+                <div class="card-face card-front ${currentCategory}">
+                    ${card.content}
+                </div>
+            `;
+            
+            cardElement.addEventListener('click', () => flipCard(card.id));
+            grid.appendChild(cardElement);
+        });
+    }
+
+    function flipCard(cardId) {
+        if (!gameStarted) {
+            startGame();
+        }
+        
+        const card = gameCards.find(c => c.id === cardId);
+        const cardElement = document.querySelector(`[data-card-id="${cardId}"]`);
+        
+        // Don't flip if already flipped or matched
+        if (flippedCards.includes(cardId) || card.matched || flippedCards.length >= 2) {
+            return;
+        }
+        
+        // Play flip sound
+        playFlipSound();
+        
+        // Flip the card
+        cardElement.classList.add('flipped');
+        flippedCards.push(cardId);
+        
+        // Check for match when two cards are flipped
+        if (flippedCards.length === 2) {
+            moves++;
+            document.getElementById('moves').textContent = moves;
+            
+            setTimeout(() => checkMatch(), 1000);
+        }
+    }
+
+    function checkMatch() {
+        const [card1Id, card2Id] = flippedCards;
+        const card1 = gameCards.find(c => c.id === card1Id);
+        const card2 = gameCards.find(c => c.id === card2Id);
+        const card1Element = document.querySelector(`[data-card-id="${card1Id}"]`);
+        const card2Element = document.querySelector(`[data-card-id="${card2Id}"]`);
+        
+        if (card1.pairId === card2.pairId) {
+            // Match found!
+            card1.matched = true;
+            card2.matched = true;
+            matchedPairs++;
+            streak++;
+            perfectMatches++;
+            
+            // Play success sound and effects
+            playSuccessSound();
+            
+            // Add glow effect
+            card1Element.classList.add('card-glow');
+            card2Element.classList.add('card-glow');
+            
+            // Create particle effects
+            createParticleEffect(card1Element);
+            createParticleEffect(card2Element);
+            
+            // Show combo indicator for streaks
+            if (streak >= 3) {
+                showComboIndicator();
+                playComboSound();
+            }
+            
+            // Update streak counter
+            updateStreakCounter();
+            
+            document.getElementById('matches').textContent = matchedPairs;
+            
+            // Update matched cards appearance
+            setTimeout(() => {
+                card1Element.classList.add('matched');
+                card2Element.classList.add('matched');
+                card1Element.classList.remove('card-glow');
+                card2Element.classList.remove('card-glow');
+            }, 500);
+            
+            // Update progress
+            updateProgress();
+            
+            // Check for achievements
+            checkAchievements();
+            
+            // Check if game is complete
+            if (matchedPairs === difficulties[currentDifficulty].pairs) {
+                completeGame();
+            }
+        } else {
+            // No match - play fail sound and shake
+            playFailSound();
+            streak = 0; // Reset streak
+            updateStreakCounter();
+            
+            card1Element.classList.add('shake-animation');
+            card2Element.classList.add('shake-animation');
+            
+            setTimeout(() => {
+                card1Element.classList.remove('flipped', 'shake-animation');
+                card2Element.classList.remove('flipped', 'shake-animation');
+            }, 500);
+        }
+        
+        flippedCards = [];
+    }
+
+    function updateProgress() {
+        const progress = (matchedPairs / difficulties[currentDifficulty].pairs) * 100;
+        document.getElementById('progressFill').style.width = `${progress}%`;
+    }
+
+    function startGame() {
+        const music = document.getElementById('background-music');
+            if (music && music.paused) music.play();
+        gameStarted = true;
+        timerInterval = setInterval(() => {
+            gameTimer++;
+            const minutes = Math.floor(gameTimer / 60);
+            const seconds = gameTimer % 60;
+            document.getElementById('timer').textContent = 
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }, 1000);
+    }
+        // ⬅️ Back Button Handler
+        function goBackToMain() {
+            window.location.href = "https://iridescent-manatee-6198a9.netlify.app/"; // Replace with your actual main page filename
+        }
+    function completeGame() {
+        clearInterval(timerInterval);
+        
+        // Check for level progression
+        const currentReq = levelRequirements[currentLevel - 1];
+        if (gameTimer <= currentReq.time && moves <= currentReq.matches * 1.5) {
+            levelUp();
+        }
+        
+        playLevelUpSound();
+        document.getElementById('gameComplete').style.display = 'block';
+        
+        // Scroll to completion message
+        document.getElementById('gameComplete').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function createParticleEffect(element) {
+        const rect = element.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        
+        for (let i = 0; i < 8; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = centerX + 'px';
+            particle.style.top = centerY + 'px';
+            
+            const angle = (i / 8) * Math.PI * 2;
+            const distance = 100 + Math.random() * 50;
+            const dx = Math.cos(angle) * distance;
+            const dy = Math.sin(angle) * distance;
+            
+            particle.style.setProperty('--dx', dx + 'px');
+            particle.style.setProperty('--dy', dy + 'px');
+            
+            document.body.appendChild(particle);
+            
+            setTimeout(() => particle.remove(), 1000);
+        }
+    }
+
+    function showComboIndicator() {
+        const indicator = document.getElementById('comboIndicator');
+        const messages = [
+            'PERFECT MATCH!',
+            'ON FIRE! 🔥',
+            'AMAZING STREAK!',
+            'LOGISTICS MASTER!',
+            'UNSTOPPABLE!'
+        ];
+        
+        indicator.textContent = messages[Math.min(streak - 3, messages.length - 1)];
+        indicator.classList.add('show');
+        
+        setTimeout(() => {
+            indicator.classList.remove('show');
+        }, 1500);
+    }
+
+    function updateStreakCounter() {
+        const counter = document.getElementById('streakCounter');
+        const streakNumber = document.getElementById('streakNumber');
+        
+        streakNumber.textContent = streak;
+        
+        if (streak >= 3) {
+            counter.classList.add('show');
+        } else {
+            counter.classList.remove('show');
+        }
+    }
+
+    function levelUp() {
+        if (currentLevel < levelTitles.length) {
+            currentLevel++;
+            updateLevelDisplay();
+            showAchievement(`Level ${currentLevel} Unlocked!`, `You are now a ${levelTitles[currentLevel - 1]}!`);
+            playLevelUpSound();
+        }
+    }
+
+    function updateLevelDisplay() {
+        const indicator = document.getElementById('levelIndicator');
+        indicator.textContent = `Level ${currentLevel} - ${levelTitles[currentLevel - 1]}`;
+        
+        // Update level progress dots
+        const dots = document.querySelectorAll('.level-dot');
+        dots.forEach((dot, index) => {
+            dot.classList.remove('current', 'completed');
+            if (index < currentLevel - 1) {
+                dot.classList.add('completed');
+            } else if (index === currentLevel - 1) {
+                dot.classList.add('current');
+            }
+        });
+    }
+
+    function checkAchievements() {
+        // Perfect game achievement
+        if (moves === matchedPairs * 2 && !achievements.includes('perfect')) {
+            achievements.push('perfect');
+            showAchievement('Perfect Game!', 'You completed the game with no mistakes!');
+        }
+        
+        // Speed demon achievement
+        if (gameTimer <= 60 && matchedPairs >= 8 && !achievements.includes('speed')) {
+            achievements.push('speed');
+            showAchievement('Speed Demon!', 'Completed in under 60 seconds!');
+        }
+        
+        // Streak master achievement
+        if (streak >= 10 && !achievements.includes('streak')) {
+            achievements.push('streak');
+            showAchievement('Streak Master!', '10 matches in a row!');
+        }
+    }
+
+    function showAchievement(title, description) {
+        const popup = document.getElementById('achievementPopup');
+        const text = document.getElementById('achievementText');
+        
+        popup.querySelector('h3').textContent = '🏆 ' + title;
+        text.textContent = description;
+        
+        popup.classList.add('show');
+        
+        setTimeout(() => {
+            popup.classList.remove('show');
+        }, 3000);
+    }
+
+   
+    function toggleMusic() {
+            const music = document.getElementById('background-music');
+            if (music.paused) {
+                music.play();
+            } else {
+                music.pause();
+            }
+        }
+    function toggleSounds() {
+        soundEnabled = !soundEnabled;
+        const btn = document.getElementById('soundToggle');
+        btn.textContent = soundEnabled ? '🔊' : '🔇';
+    }
+
+    function restartGame() {
+        // Reset game state
+        gameStarted = false;
+        flippedCards = [];
+        matchedPairs = 0;
+        moves = 0;
+        gameTimer = 0;
+        streak = 0;
+        perfectMatches = 0;
+        clearInterval(timerInterval);
+        
+        // Reset UI
+        document.getElementById('moves').textContent = '0';
+        document.getElementById('matches').textContent = '0';
+        document.getElementById('timer').textContent = '00:00';
+        document.getElementById('progressFill').style.width = '0%';
+        document.getElementById('gameComplete').style.display = 'none';
+        document.getElementById('streakCounter').classList.remove('show');
+        
+        // Create and render new game
+        createGameCards();
+        renderGame();
+    }
+
+    function nextCategory() {
+        const categories = Object.keys(gameData);
+        const currentIndex = categories.indexOf(currentCategory);
+        const nextIndex = (currentIndex + 1) % categories.length;
+        
+        // Update category
+        currentCategory = categories[nextIndex];
+        
+        // Update active button
+        document.querySelectorAll('.category-btn').forEach((btn, index) => {
+            btn.classList.toggle('active', index === nextIndex);
+        });
+        
+        // Update learning panel and restart
+        updateLearningPanel();
+        restartGame();
+    }
+
+    function showHint() {
+        const unmatched = gameCards.filter(card => !card.matched);
+        if (unmatched.length >= 2) {
+            const randomCard = unmatched[Math.floor(Math.random() * unmatched.length)];
+            const pairCard = unmatched.find(card => 
+                card.pairId === randomCard.pairId && card.id !== randomCard.id
+            );
+            
+            if (pairCard) {
+                const cardElement1 = document.querySelector(`[data-card-id="${randomCard.id}"]`);
+                const cardElement2 = document.querySelector(`[data-card-id="${pairCard.id}"]`);
+                
+                // Briefly highlight the pair
+                cardElement1.style.boxShadow = '0 0 20px #ffc107';
+                cardElement2.style.boxShadow = '0 0 20px #ffc107';
+                
+                setTimeout(() => {
+                    cardElement1.style.boxShadow = '';
+                    cardElement2.style.boxShadow = '';
+                }, 2000);
+            }
+        }
+    }
+
+    // Initialize game
+    window.addEventListener('load', function() {
+        updateLearningPanel();
+        updateLevelDisplay();
+        createGameCards();
+        renderGame();
+        
+        // Start background music after user interaction
+        document.addEventListener('click', function initAudio() {
+            if (audioContext.state === 'suspended') {
+                audioContext.resume();
+            }
+            startBackgroundMusic();
+            document.removeEventListener('click', initAudio);
+        }, { once: true });
+    });
+</script>
+</body>
+</html>
