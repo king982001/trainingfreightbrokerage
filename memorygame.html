@@ -512,10 +512,9 @@
     </head>
     <body>
         <!-- 🔊 Background Music -->
-    <audio id="background-music" autoplay loop>
-        <source src="audio/background1.mp3" type="audio/mpeg">
-        Your browser does not support the audio element.
-    </audio>
+   <audio id="background-music" autoplay loop volume="1">
+    <source id="music-source" src="audio/level1.mp3" type="audio/mpeg">
+</audio>
 
 <div class="streak-counter" id="streakCounter">
     🔥 Streak: <span id="streakNumber">0</span>
@@ -1163,6 +1162,7 @@
             updateLevelDisplay();
             showAchievement(`Level ${currentLevel} Unlocked!`, `You are now a ${levelTitles[currentLevel - 1]}!`);
             playLevelUpSound();
+            updateBackgroundMusic(); //
         }
     }
 
@@ -1181,7 +1181,51 @@
             }
         });
     }
+function updateBackgroundMusic() {
+    const music = document.getElementById('background-music');
+    const source = document.getElementById('music-source');
+    const newMusic = `audio/level${currentLevel}.mp3`;
 
+    if (source.getAttribute('src') === newMusic) return;
+
+    // Fade out current music
+    const fadeOutDuration = 1000; // in ms
+    let fadeStep = 0.05;
+    let fadeInterval = setInterval(() => {
+        if (music.volume > fadeStep) {
+            music.volume -= fadeStep;
+        } else {
+            clearInterval(fadeInterval);
+            music.pause();
+            music.volume = 0;
+
+            // Change music source
+            source.setAttribute('src', newMusic);
+            music.load();
+
+            // Wait a moment before fade-in
+            setTimeout(() => {
+                if (musicEnabled) {
+                    music.play();
+                    fadeInMusic(music);
+                }
+            }, 200);
+        }
+    }, fadeOutDuration * fadeStep);
+}
+
+function fadeInMusic(audioElement) {
+    const fadeInDuration = 1000; // in ms
+    let fadeStep = 0.05;
+    let fadeInterval = setInterval(() => {
+        if (audioElement.volume < 1 - fadeStep) {
+            audioElement.volume += fadeStep;
+        } else {
+            audioElement.volume = 1;
+            clearInterval(fadeInterval);
+        }
+    }, fadeInDuration * fadeStep);
+}
     function checkAchievements() {
         // Perfect game achievement
         if (moves === matchedPairs * 2 && !achievements.includes('perfect')) {
@@ -1303,6 +1347,7 @@
         updateLevelDisplay();
         createGameCards();
         renderGame();
+        updateBackgroundMusic();
         
         // Start background music after user interaction
         document.addEventListener('click', function initAudio() {
