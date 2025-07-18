@@ -490,6 +490,7 @@
         <button class="mode-btn" onclick="setGameMode('quiz')">Quiz Mode (10 Questions)</button>
         <button class="mode-btn" onclick="setGameMode('adaptive')">🤖 AI Adaptive Mode</button>
           <button onclick="goBackToMain()" class="mode-btn">Interactive Learning </button>
+         <button onclick="goBackToMemory()" class="mode-btn">Memory Game </button>
     </div>
     
     <div class="ai-controls">
@@ -1710,6 +1711,11 @@ document.addEventListener('DOMContentLoaded', addDragEvents);
         function goBackToMain() {
             window.location.href = "https://iridescent-manatee-6198a9.netlify.app/trainer.html"; // Replace with your actual main page filename
         }
+    // ⬅️ Back Button Handler
+        function goBackToMemory() {
+            window.location.href = "https://iridescent-manatee-6198a9.netlify.app/memorygame.html"; // Replace with your actual main page filename
+        }
+
 
 
 </script>
