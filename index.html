@@ -489,6 +489,7 @@
         <button class="mode-btn" onclick="setGameMode('timed')">Timed Challenge (60s)</button>
         <button class="mode-btn" onclick="setGameMode('quiz')">Quiz Mode (10 Questions)</button>
         <button class="mode-btn" onclick="setGameMode('adaptive')">🤖 AI Adaptive Mode</button>
+        <button class="mode-btn" onclick=" goTotrainer()">Interactive Learning</button>
     </div>
     
     <div class="ai-controls">
@@ -1717,7 +1718,11 @@ function dropItem(e) {
     }
   }, 300);
 }
-
+ // ⬅️ Back Button Handler
+        function goTotrainer() {
+            window.location.href = "https://iridescent-manatee-6198a9.netlify.app/trainer.html"; // Replace with your actual main page filename
+        }
+    
 </script>
 
 </html>
