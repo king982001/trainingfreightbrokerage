@@ -489,7 +489,6 @@
         <button class="mode-btn" onclick="setGameMode('timed')">Timed Challenge (60s)</button>
         <button class="mode-btn" onclick="setGameMode('quiz')">Quiz Mode (10 Questions)</button>
         <button class="mode-btn" onclick="setGameMode('adaptive')">🤖 AI Adaptive Mode</button>
-          <button onclick="goBackToMain()" class="mode-btn">Interactive Learning </button>
     </div>
     
     <div class="ai-controls">
@@ -605,6 +604,7 @@
     <div style="margin-top:20px;">
       <button class="btn btn-secondary" onclick="submitEscapeRoom()">Submit</button>
       <button class="btn btn-primary" onclick="closeEscapeRoom()" style="float:right;">Exit</button>
+       <button class="voice-btn" onclick="toggleMusic()">🎵 Toggle Music</button>
     </div>
     <div id="escape-feedback" style="margin-top:15px; font-weight:bold;"></div>
   </div>
@@ -731,105 +731,105 @@ function arraysMatch(a, b) {
 <script>
     const flashCards = [
 // All US States: Abbreviation <-> Full Name
-  { question: "Which state uses the abbreviation AL?", answer: "Alabama", category: "terms" },
-  { question: "Which state uses the abbreviation AK?", answer: "Alaska", category: "terms" },
-  { question: "Which state uses the abbreviation AZ?", answer: "Arizona", category: "terms" },
-  { question: "Which state uses the abbreviation AR?", answer: "Arkansas", category: "terms" },
-  { question: "Which state uses the abbreviation CA?", answer: "California", category: "terms" },
-  { question: "Which state uses the abbreviation CO?", answer: "Colorado", category: "terms" },
-  { question: "Which state uses the abbreviation CT?", answer: "Connecticut", category: "terms" },
-  { question: "Which state uses the abbreviation DE?", answer: "Delaware", category: "terms" },
-  { question: "Which state uses the abbreviation FL?", answer: "Florida", category: "terms" },
-  { question: "Which state uses the abbreviation GA?", answer: "Georgia", category: "terms" },
-  { question: "Which state uses the abbreviation HI?", answer: "Hawaii", category: "terms" },
-  { question: "Which state uses the abbreviation ID?", answer: "Idaho", category: "terms" },
-  { question: "Which state uses the abbreviation IL?", answer: "Illinois", category: "terms" },
-  { question: "Which state uses the abbreviation IN?", answer: "Indiana", category: "terms" },
-  { question: "Which state uses the abbreviation IA?", answer: "Iowa", category: "terms" },
-  { question: "Which state uses the abbreviation KS?", answer: "Kansas", category: "terms" },
-  { question: "Which state uses the abbreviation KY?", answer: "Kentucky", category: "terms" },
-  { question: "Which state uses the abbreviation LA?", answer: "Louisiana", category: "terms" },
-  { question: "Which state uses the abbreviation ME?", answer: "Maine", category: "terms" },
-  { question: "Which state uses the abbreviation MD?", answer: "Maryland", category: "terms" },
-  { question: "Which state uses the abbreviation MA?", answer: "Massachusetts", category: "terms" },
-  { question: "Which state uses the abbreviation MI?", answer: "Michigan", category: "terms" },
-  { question: "Which state uses the abbreviation MN?", answer: "Minnesota", category: "terms" },
-  { question: "Which state uses the abbreviation MS?", answer: "Mississippi", category: "terms" },
-  { question: "Which state uses the abbreviation MO?", answer: "Missouri", category: "terms" },
-  { question: "Which state uses the abbreviation MT?", answer: "Montana", category: "terms" },
-  { question: "Which state uses the abbreviation NE?", answer: "Nebraska", category: "terms" },
-  { question: "Which state uses the abbreviation NV?", answer: "Nevada", category: "terms" },
-  { question: "Which state uses the abbreviation NH?", answer: "New Hampshire", category: "terms" },
-  { question: "Which state uses the abbreviation NJ?", answer: "New Jersey", category: "terms" },
-  { question: "Which state uses the abbreviation NM?", answer: "New Mexico", category: "terms" },
-  { question: "Which state uses the abbreviation NY?", answer: "New York", category: "terms" },
-  { question: "Which state uses the abbreviation NC?", answer: "North Carolina", category: "terms" },
-  { question: "Which state uses the abbreviation ND?", answer: "North Dakota", category: "terms" },
-  { question: "Which state uses the abbreviation OH?", answer: "Ohio", category: "terms" },
-  { question: "Which state uses the abbreviation OK?", answer: "Oklahoma", category: "terms" },
-  { question: "Which state uses the abbreviation OR?", answer: "Oregon", category: "terms" },
-  { question: "Which state uses the abbreviation PA?", answer: "Pennsylvania", category: "terms" },
-  { question: "Which state uses the abbreviation RI?", answer: "Rhode Island", category: "terms" },
-  { question: "Which state uses the abbreviation SC?", answer: "South Carolina", category: "terms" },
-  { question: "Which state uses the abbreviation SD?", answer: "South Dakota", category: "terms" },
-  { question: "Which state uses the abbreviation TN?", answer: "Tennessee", category: "terms" },
-  { question: "Which state uses the abbreviation TX?", answer: "Texas", category: "terms" },
-  { question: "Which state uses the abbreviation UT?", answer: "Utah", category: "terms" },
-  { question: "Which state uses the abbreviation VT?", answer: "Vermont", category: "terms" },
-  { question: "Which state uses the abbreviation VA?", answer: "Virginia", category: "terms" },
-  { question: "Which state uses the abbreviation WA?", answer: "Washington", category: "terms" },
-  { question: "Which state uses the abbreviation WV?", answer: "West Virginia", category: "terms" },
-  { question: "Which state uses the abbreviation WI?", answer: "Wisconsin", category: "terms" },
-  { question: "Which state uses the abbreviation WY?", answer: "Wyoming", category: "terms" },
+  { question: "Which state uses the abbreviation AL?", answer: "Alabama – Capital: Montgomery. Common freight includes steel, automotive parts, and poultry.", category: "terms" },
+  { question: "Which state uses the abbreviation AK?", answer: "Alaska – Capital: Juneau. Freight relies heavily on air and sea routes due to limited highways.", category: "terms" },
+  { question: "Which state uses the abbreviation AZ?", answer: "Arizona – Capital: Phoenix. Major freight includes electronics, produce, and cross-border goods.", category: "terms" },
+  { question: "Which state uses the abbreviation AR?", answer: "Arkansas – Capital: Little Rock. Home to Walmart HQ; retail and food distribution is key.", category: "terms" },
+  { question: "Which state uses the abbreviation CA?", answer: "California – Capital: Sacramento. Port of LA & Long Beach are top U.S. freight gateways.", category: "terms" },
+  { question: "Which state uses the abbreviation CO?", answer: "Colorado – Capital: Denver. Freight moves via I-70 and I-25; common cargo includes beer and produce.", category: "terms" },
+  { question: "Which state uses the abbreviation CT?", answer: "Connecticut – Capital: Hartford. Dense industrial base with proximity to NYC freight corridors.", category: "terms" },
+  { question: "Which state uses the abbreviation DE?", answer: "Delaware – Capital: Dover. Located in the busy Northeast Corridor; pharma and chemicals are common.", category: "terms" },
+  { question: "Which state uses the abbreviation FL?", answer: "Florida – Capital: Tallahassee. Agricultural exports and imports from Port of Miami dominate freight.", category: "terms" },
+  { question: "Which state uses the abbreviation GA?", answer: "Georgia – Capital: Atlanta. A major trucking hub; Atlanta is home to major intermodal terminals.", category: "terms" },
+  { question: "Which state uses the abbreviation HI?", answer: "Hawaii – Capital: Honolulu. Nearly all freight arrives by sea or air.", category: "terms" },
+  { question: "Which state uses the abbreviation ID?", answer: "Idaho – Capital: Boise. Potatoes and agri-products are the top freight outbound.", category: "terms" },
+  { question: "Which state uses the abbreviation IL?", answer: "Illinois – Capital: Springfield. Chicago is the nation's top rail and intermodal hub.", category: "terms" },
+  { question: "Which state uses the abbreviation IN?", answer: "Indiana – Capital: Indianapolis. Important logistics corridor; auto parts and agri-goods dominate.", category: "terms" },
+  { question: "Which state uses the abbreviation IA?", answer: "Iowa – Capital: Des Moines. Freight includes corn, soybeans, and meat products.", category: "terms" },
+  { question: "Which state uses the abbreviation KS?", answer: "Kansas – Capital: Topeka. Agriculture and aerospace parts drive freight volumes.", category: "terms" },
+  { question: "Which state uses the abbreviation KY?", answer: "Kentucky – Capital: Frankfort. UPS Worldport in Louisville is a major air freight hub.", category: "terms" },
+  { question: "Which state uses the abbreviation LA?", answer: "Louisiana – Capital: Baton Rouge. Port of New Orleans supports oil, gas, and agri-freight.", category: "terms" },
+  { question: "Which state uses the abbreviation ME?", answer: "Maine – Capital: Augusta. Freight includes paper, seafood, and forest products.", category: "terms" },
+  { question: "Which state uses the abbreviation MD?", answer: "Maryland – Capital: Annapolis. Proximity to DC and Port of Baltimore affects freight trends.", category: "terms" },
+  { question: "Which state uses the abbreviation MA?", answer: "Massachusetts – Capital: Boston. Pharma, seafood, and electronics are key freight sectors.", category: "terms" },
+  { question: "Which state uses the abbreviation MI?", answer: "Michigan – Capital: Lansing. Detroit is vital for auto parts and Canadian cross-border freight.", category: "terms" },
+  { question: "Which state uses the abbreviation MN?", answer: "Minnesota – Capital: St. Paul. Grain, steel, and machinery make up common freight.", category: "terms" },
+  { question: "Which state uses the abbreviation MS?", answer: "Mississippi – Capital: Jackson. Lumber, poultry, and textiles are frequent freight.", category: "terms" },
+  { question: "Which state uses the abbreviation MO?", answer: "Missouri – Capital: Jefferson City. Centrally located for national freight flow; major hubs in KC and STL.", category: "terms" },
+  { question: "Which state uses the abbreviation MT?", answer: "Montana – Capital: Helena. Agriculture, coal, and oil are key freight goods.", category: "terms" },
+  { question: "Which state uses the abbreviation NE?", answer: "Nebraska – Capital: Lincoln. Corn, beef, and ethanol are core outbound freight.", category: "terms" },
+  { question: "Which state uses the abbreviation NV?", answer: "Nevada – Capital: Carson City. Vegas logistics supports retail, food, and convention freight.", category: "terms" },
+  { question: "Which state uses the abbreviation NH?", answer: "New Hampshire – Capital: Concord. Light manufacturing and proximity to Boston impact freight.", category: "terms" },
+  { question: "Which state uses the abbreviation NJ?", answer: "New Jersey – Capital: Trenton. Port Newark is a major freight hub for goods into the Northeast.", category: "terms" },
+  { question: "Which state uses the abbreviation NM?", answer: "New Mexico – Capital: Santa Fe. Border freight with Mexico and oil equipment are key sectors.", category: "terms" },
+  { question: "Which state uses the abbreviation NY?", answer: "New York – Capital: Albany. NYC region handles immense import/export volume, esp. from JFK & seaports.", category: "terms" },
+  { question: "Which state uses the abbreviation NC?", answer: "North Carolina – Capital: Raleigh. Freight includes furniture, textiles, and tech equipment.", category: "terms" },
+  { question: "Which state uses the abbreviation ND?", answer: "North Dakota – Capital: Bismarck. Oil and agricultural goods like wheat dominate freight.", category: "terms" },
+  { question: "Which state uses the abbreviation OH?", answer: "Ohio – Capital: Columbus. Freight corridor with auto, steel, and manufacturing goods.", category: "terms" },
+  { question: "Which state uses the abbreviation OK?", answer: "Oklahoma – Capital: Oklahoma City. Oilfield equipment and agri-products drive freight.", category: "terms" },
+  { question: "Which state uses the abbreviation OR?", answer: "Oregon – Capital: Salem. Freight includes wood products, tech, and Asian imports via Portland.", category: "terms" },
+  { question: "Which state uses the abbreviation PA?", answer: "Pennsylvania – Capital: Harrisburg. Intermodal logistics center with pharma, steel, and groceries.", category: "terms" },
+  { question: "Which state uses the abbreviation RI?", answer: "Rhode Island – Capital: Providence. Textiles and seafood are common regional freight.", category: "terms" },
+  { question: "Which state uses the abbreviation SC?", answer: "South Carolina – Capital: Columbia. Port of Charleston supports automotive and manufacturing exports.", category: "terms" },
+  { question: "Which state uses the abbreviation SD?", answer: "South Dakota – Capital: Pierre. Grain and cattle are major outbound freight.", category: "terms" },
+  { question: "Which state uses the abbreviation TN?", answer: "Tennessee – Capital: Nashville. FedEx hub in Memphis handles major air cargo volumes.", category: "terms" },
+  { question: "Which state uses the abbreviation TX?", answer: "Texas – Capital: Austin. Cross-border freight, oil, and industrial goods dominate.", category: "terms" },
+  { question: "Which state uses the abbreviation UT?", answer: "Utah – Capital: Salt Lake City. Central western hub for intermodal freight; machinery & food common.", category: "terms" },
+  { question: "Which state uses the abbreviation VT?", answer: "Vermont – Capital: Montpelier. Dairy and forestry are main outbound freight.", category: "terms" },
+  { question: "Which state uses the abbreviation VA?", answer: "Virginia – Capital: Richmond. Norfolk port handles international shipping; also high tech freight.", category: "terms" },
+  { question: "Which state uses the abbreviation WA?", answer: "Washington – Capital: Olympia. Port of Seattle supports Asian imports; agri and aerospace exports.", category: "terms" },
+  { question: "Which state uses the abbreviation WV?", answer: "West Virginia – Capital: Charleston. Coal and timber are major freight items.", category: "terms" },
+  { question: "Which state uses the abbreviation WI?", answer: "Wisconsin – Capital: Madison. Cheese, machinery, and dairy dominate freight.", category: "terms" },
+  { question: "Which state uses the abbreviation WY?", answer: "Wyoming – Capital: Cheyenne. Coal and livestock are the key freight types.", category: "terms" },
     
   // Industry Abreviations
 
- { question: "What does FMCSA stand for?", answer: "Federal Motor Carrier Safety Administration", category: "fterms" },
-  { question: "What does DOT stand for?", answer: "Department of Transportation", category: "fterms" },
-  { question: "What does MC Number stand for?", answer: "Motor Carrier Number", category: "fterms" },
-  { question: "What does SCAC stand for?", answer: "Standard Carrier Alpha Code", category: "fterms" },
-  { question: "What does BOL stand for?", answer: "Bill of Lading", category: "fterms" },
-  { question: "What does POD stand for?", answer: "Proof of Delivery", category: "fterms" },
-  { question: "What does LTL mean?", answer: "Less Than Truckload", category: "fterms" },
-  { question: "What does TL/FTL mean?", answer: "Full Truckload / Truckload", category: "fterms" },
-  { question: "What does DR stand for?", answer: "Delivery Receipt", category: "fterms" },
-  { question: "What does ETA mean?", answer: "Estimated Time of Arrival", category: "fterms" },
-  { question: "What does ETD mean?", answer: "Estimated Time of Departure", category: "fterms" },
-  { question: "What does EDI stand for?", answer: "Electronic Data Interchange", category: "fterms" },
-  { question: "What does TMS stand for?", answer: "Transportation Management System", category: "fterms" },
-  { question: "What does 3PL stand for?", answer: "Third-Party Logistics", category: "fterms" },
-  { question: "What does 4PL stand for?", answer: "Fourth-Party Logistics", category: "fterms" },
-  { question: "What does FOB mean?", answer: "Free On Board", category: "fterms" },
-  { question: "What does FSC stand for?", answer: "Fuel Surcharge", category: "fterms" },
-  { question: "What does OOS stand for?", answer: "Out of Service", category: "fterms" },
-  { question: "What does ELD stand for?", answer: "Electronic Logging Device", category: "fterms" },
-  { question: "What does HOS stand for?", answer: "Hours of Service", category: "fterms" },
-  { question: "What does OO or O/O mean?", answer: "Owner-Operator", category: "fterms" },
-  { question: "What does IRP stand for?", answer: "International Registration Plan", category: "fterms" },
-  { question: "What does IFTA stand for?", answer: "International Fuel Tax Agreement", category: "fterms" },
-  { question: "What does TWIC stand for?", answer: "Transportation Worker Identification Credential", category: "fterms" },
-  { question: "What does CSA stand for?", answer: "Compliance, Safety, Accountability", category: "fterms" },
-  { question: "What does APPT mean?", answer: "Appointment", category: "fterms" },
-  { question: "What does PPE stand for?", answer: "Personal Protection Equipment", category: "fterms" },
-  { question: "What does COI stand for?", answer: "Certificate of Insurance", category: "fterms" },
-  { question: "What does DBA mean?", answer: "Doing Business As", category: "fterms" },
-  { question: "What does DAT stand for?", answer: "Dial-A-Truck", category: "fterms" },
-  { question: "What does FCFS mean?", answer: "First Come, First Serve", category: "fterms" },
-  { question: "What does FC mean in freight?", answer: "Factoring Company", category: "fterms" },
-  { question: "What does NOA mean?", answer: "Notice of Assignment", category: "fterms" },
-  { question: "What does RPM stand for?", answer: "Rate Per Mile", category: "fterms" },
-  { question: "What does OTR mean?", answer: "Over the Road", category: "fterms" },
-  { question: "What is an Empty Scale Ticket?", answer: "A ticket showing the truck's weight before loading", category: "fterms" },
-  { question: "What does ITS stand for?", answer: "Internet Truckstop", category: "fterms" },
-  { question: "What does TS stand for?", answer: "Truck Stop", category: "fterms" },
-  { question: "What does VIN# stand for?", answer: "Vehicle Identification Number", category: "fterms" },
-  { question: "What does LOR stand for?", answer: "Letter of Release", category: "fterms" },
-  { question: "What does BIPD stand for?", answer: "Bodily Injury and Property Damage", category: "fterms" },
-  { question: "What is a truck door picture?", answer: "A photo showing truck door info like USDOT and MC#", category: "fterms" },
-  { question: "What is a COI Holder?", answer: "The person/company listed on the COI to receive updates", category: "fterms" },
-  { question: "What is a Heavy Scale Ticket?", answer: "A ticket showing total truck weight after loading", category: "fterms" },
-  { question: "What is a Coast to Coast Shipment?", answer: "Freight transported across the U.S. from East to West or vice versa", category: "fterms" },
-  { question: "What does RC stand for in freight?", answer: "Rate Confirmation", category: "fterms" },
+ { question: "What does FMCSA stand for?", answer: "Federal Motor Carrier Safety Administration – A division of the DOT that regulates commercial motor vehicles for safety and compliance.", category: "fterms" },
+{ question: "What does DOT stand for?", answer: "Department of Transportation – The federal agency responsible for overseeing transportation systems including roads, rail, and freight.", category: "fterms" },
+{ question: "What does MC Number stand for?", answer: "Motor Carrier Number – A unique identifier assigned to for-hire carriers by the FMCSA.", category: "fterms" },
+{ question: "What does SCAC stand for?", answer: "Standard Carrier Alpha Code – A unique two-to-four-letter code used to identify transportation companies.", category: "fterms" },
+{ question: "What does BOL stand for?", answer: "Bill of Lading – A legal document between the shipper and carrier detailing the type, quantity, and destination of the goods.", category: "fterms" },
+{ question: "What does POD stand for?", answer: "Proof of Delivery – A document signed at delivery confirming receipt of shipment.", category: "fterms" },
+{ question: "What does LTL mean?", answer: "Less Than Truckload – A freight shipping method for shipments that don’t fill an entire truck.", category: "fterms" },
+{ question: "What does TL/FTL mean?", answer: "Full Truckload / Truckload – A freight shipping method where the shipment fills the entire trailer.", category: "fterms" },
+{ question: "What does DR stand for?", answer: "Delivery Receipt – A document signed at delivery acknowledging goods were received.", category: "fterms" },
+{ question: "What does ETA mean?", answer: "Estimated Time of Arrival – The predicted time a shipment will reach its destination.", category: "fterms" },
+{ question: "What does ETD mean?", answer: "Estimated Time of Departure – The scheduled time a shipment leaves its origin point.", category: "fterms" },
+{ question: "What does EDI stand for?", answer: "Electronic Data Interchange – The electronic exchange of business documents between systems.", category: "fterms" },
+{ question: "What does TMS stand for?", answer: "Transportation Management System – Software that helps plan, execute, and optimize freight movement.", category: "fterms" },
+{ question: "What does 3PL stand for?", answer: "Third-Party Logistics – A company hired to handle logistics and supply chain operations.", category: "fterms" },
+{ question: "What does 4PL stand for?", answer: "Fourth-Party Logistics – A logistics partner managing and integrating all aspects of the supply chain.", category: "fterms" },
+{ question: "What does FOB mean?", answer: "Free On Board – A shipping term that indicates when liability and ownership of goods transfer from seller to buyer.", category: "fterms" },
+{ question: "What does FSC stand for?", answer: "Fuel Surcharge – An additional fee added to freight costs to cover fluctuating fuel prices.", category: "fterms" },
+{ question: "What does OOS stand for?", answer: "Out of Service – A status indicating that a truck or driver is temporarily not allowed to operate.", category: "fterms" },
+{ question: "What does ELD stand for?", answer: "Electronic Logging Device – A device used to automatically record a driver’s hours of service.", category: "fterms" },
+{ question: "What does HOS stand for?", answer: "Hours of Service – FMCSA regulations governing how many hours a driver can operate.", category: "fterms" },
+{ question: "What does OO or O/O mean?", answer: "Owner-Operator – A truck driver who owns and operates their own trucking business.", category: "fterms" },
+{ question: "What does IRP stand for?", answer: "International Registration Plan – A registration agreement for interstate commercial vehicles among U.S. states and Canadian provinces.", category: "fterms" },
+{ question: "What does IFTA stand for?", answer: "International Fuel Tax Agreement – A tax collection agreement for fuel use by carriers traveling between jurisdictions.", category: "fterms" },
+{ question: "What does TWIC stand for?", answer: "Transportation Worker Identification Credential – A security clearance for workers accessing secure port and maritime areas.", category: "fterms" },
+{ question: "What does CSA stand for?", answer: "Compliance, Safety, Accountability – An FMCSA program that tracks carrier safety and compliance.", category: "fterms" },
+{ question: "What does APPT mean?", answer: "Appointment – A scheduled time for pickup or delivery at a facility.", category: "fterms" },
+{ question: "What does PPE stand for?", answer: "Personal Protection Equipment – Safety gear such as gloves, helmets, or vests required in certain environments.", category: "fterms" },
+{ question: "What does COI stand for?", answer: "Certificate of Insurance – A document that proves a company has active insurance coverage.", category: "fterms" },
+{ question: "What does DBA mean?", answer: "Doing Business As – A name a business uses that is not its legal name.", category: "fterms" },
+{ question: "What does DAT stand for?", answer: "Dial-A-Truck – A freight load board platform for finding and posting loads and trucks.", category: "fterms" },
+{ question: "What does FCFS mean?", answer: "First Come, First Serve – A loading/unloading system based on order of arrival.", category: "fterms" },
+{ question: "What does FC mean in freight?", answer: "Factoring Company – A financial service that buys a carrier’s invoice for immediate payment.", category: "fterms" },
+{ question: "What does NOA mean?", answer: "Notice of Assignment – A document informing a broker that a factoring company is handling payment.", category: "fterms" },
+{ question: "What does RPM stand for?", answer: "Rate Per Mile – The amount paid for each mile a shipment travels.", category: "fterms" },
+{ question: "What does OTR mean?", answer: "Over the Road – Long-haul trucking across state or regional lines.", category: "fterms" },
+{ question: "What is an Empty Scale Ticket?", answer: "A ticket showing the truck's weight before loading, used to calculate load weight.", category: "fterms" },
+{ question: "What does ITS stand for?", answer: "Internet Truckstop – A load board platform for brokers and carriers.", category: "fterms" },
+{ question: "What does TS stand for?", answer: "Truck Stop – A facility where truck drivers can fuel, rest, and access services.", category: "fterms" },
+{ question: "What does VIN# stand for?", answer: "Vehicle Identification Number – A unique code assigned to every motor vehicle for identification.", category: "fterms" },
+{ question: "What does LOR stand for?", answer: "Letter of Release – A document authorizing the release of a carrier from a broker or factoring relationship.", category: "fterms" },
+{ question: "What does BIPD stand for?", answer: "Bodily Injury and Property Damage – Liability insurance coverage for injury and damage caused by a commercial vehicle.", category: "fterms" },
+{ question: "What is a truck door picture?", answer: "A photo showing a truck's legal info (e.g., DOT#, MC#) typically displayed on its door.", category: "fterms" },
+{ question: "What is a COI Holder?", answer: "The person or company listed on a Certificate of Insurance to receive coverage updates.", category: "fterms" },
+{ question: "What is a Heavy Scale Ticket?", answer: "A scale ticket showing the total weight of the truck after it has been loaded.", category: "fterms" },
+{ question: "What is a Coast to Coast Shipment?", answer: "Freight transported from the East Coast to the West Coast (or vice versa) of the U.S.", category: "fterms" },
+{ question: "What does RC stand for in freight?", answer: "Rate Confirmation – A document that outlines the agreed rate and load details between broker and carrier.", category: "fterms" },
 
 
   // Military Phonetic Alphabet
@@ -1702,20 +1702,6 @@ function dropItem(e) {
     }
   }, 300);
 }
-
-// Initialize drag events on load
-document.addEventListener('DOMContentLoaded', addDragEvents);
-
-     // ⬅️ Back Button Handler
-        function goBackToMain() {
-            window.location.href = "https://iridescent-manatee-6198a9.netlify.app/trainer.html"; // Replace with your actual main page filename
-        }
-    // ⬅️ Back Button Handler
-        function goBackToMemory() {
-            window.location.href = "https://iridescent-manatee-6198a9.netlify.app/memorygame.html"; // Replace with your actual main page filename
-        }
-
-
 
 </script>
 
